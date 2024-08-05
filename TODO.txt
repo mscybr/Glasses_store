@@ -1,0 +1,5 @@
+TODO:
+add foreign key constraints on categroy for teh product
+add rating
+when fullfiling an order the status is changed an the product stock decreases
+when adding a product to checkout you must at the product price at the time he put it in the checked it outs

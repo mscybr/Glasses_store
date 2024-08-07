@@ -14,6 +14,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+
+    // informing all controllers that this request is an api
+    $request["is_api"] = true;
+    Route::post('login', 'AuthController@authenticate');
+    Route::post('logout', 'AuthController@logout');
+
+    Route::post('refresh', 'AuthController@refresh')->middleware(['auth:api']);
+    Route::post('me', 'AuthController@me')->middleware(["auth:api"]);
+
 });
+
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });

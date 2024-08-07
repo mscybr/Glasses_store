@@ -10,18 +10,24 @@
 	<!-- breadcrumb -->
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-			<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
-				Home
+			<a href="{{route("shop")}}" class="stext-109 cl8 hov-cl1 trans-04">
+				Shop
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>
 
-			<a href="product.html" class="stext-109 cl8 hov-cl1 trans-04">
-				Men
+			<a href={{route("shop", ["Category" => $product->category->id])}} class="stext-109 cl8 hov-cl1 trans-04">
+				{{ $product->category->categoryName }}
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>
+			@if ($product->subcategory)
+				<a href={{route("shop", ["Subcategory" => $product->subcategory->id])}} class="stext-109 cl8 hov-cl1 trans-04">
+					{{ $product->subcategory->subcategoryName }}
+					<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+				</a>
+			@endif
 
 			<span class="stext-109 cl4">
-				Lightweight Jacket
+				{{ $product->name }}
 			</span>
 		</div>
 	</div>
@@ -30,7 +36,9 @@
 	<!-- Product Detail -->
 	<section class="sec-product-detail bg0 p-t-65 p-b-60">
 		<div class="container">
-			<div class="row">
+			<form method="post" action={{route("store_order")}} class="row">
+				@csrf
+				<input type="hidden" name="product_id" value={{$product->id}}>
 				<div class="col-md-6 col-lg-7 p-b-30">
 					<div class="p-l-25 p-r-30 p-lr-0-lg">
 						<div class="wrap-slick3 flex-sb flex-w">
@@ -65,15 +73,15 @@
 				<div class="col-md-6 col-lg-5 p-b-30">
 					<div class="p-r-50 p-t-5 p-lr-0-lg">
 						<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-							Lightweight Jacket
+							{{ $product->name }}
 						</h4>
 
 						<span class="mtext-106 cl2">
-							$58.79
+							${{$product->price - ( $product->price * $product->sale )}}
 						</span>
 
 						<p class="stext-102 cl3 p-t-23">
-							Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
+							{{ $product->description }}
 						</p>
 						
 						<!--  -->
@@ -85,12 +93,11 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="time">
-											<option>Choose an option</option>
-											<option>Size S</option>
-											<option>Size M</option>
-											<option>Size L</option>
-											<option>Size XL</option>
+										<select class="js-select2" name="size">
+											<option selected disabled>Choose an option</option>
+											@foreach ( explode(",", $product->sizes) as $size )
+											<option value={{$size}}>{{ $size }}</option>
+											@endforeach
 										</select>
 										<div class="dropDownSelect2"></div>
 									</div>
@@ -104,17 +111,36 @@
 
 								<div class="size-204 respon6-next">
 									<div class="rs1-select2 bor8 bg0">
-										<select class="js-select2" name="time">
-											<option>Choose an option</option>
-											<option>Red</option>
-											<option>Blue</option>
-											<option>White</option>
-											<option>Grey</option>
+										<select class="js-select2" name="color">
+											<option selected disabled>Choose an option</option>
+											@foreach ( explode(",", $product->colors) as $color )
+											<option value={{$color}}>{{ $color }}</option>
+											@endforeach
 										</select>
 										<div class="dropDownSelect2"></div>
 									</div>
 								</div>
 							</div>
+							@if ( $product->lenses != "" )
+								<div class="flex-w flex-r-m p-b-10">
+									<div class="size-203 flex-c-m respon6">
+										Lens
+									</div>
+
+									<div class="size-204 respon6-next">
+										<div class="rs1-select2 bor8 bg0">
+											<select class="js-select2" name="color">
+												<option selected disabled>Choose an option</option>
+												@foreach ( explode(",", $product->lenses) as $lens )
+												<option value={{$lens}}>{{ $lens }}</option>
+												@endforeach
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+							@endif
+
 
 							<div class="flex-w flex-r-m p-b-10">
 								<div class="size-204 flex-w flex-m respon6-next">
@@ -123,7 +149,7 @@
 											<i class="fs-16 zmdi zmdi-minus"></i>
 										</div>
 
-										<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+										<input class="mtext-104 cl3 txt-center num-product" type="number" name="amount" value="1">
 
 										<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
 											<i class="fs-16 zmdi zmdi-plus"></i>
@@ -159,39 +185,39 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 
 			<div class="bor10 m-t-50 p-t-43 p-b-40">
 				<!-- Tab01 -->
 				<div class="tab01">
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs" role="tablist">
-						<li class="nav-item p-b-10">
-							<a class="nav-link active" data-toggle="tab" href="#description" role="tab">Description</a>
+						{{-- <li class="nav-item p-b-10">
+							<a class="nav-link " data-toggle="tab" href="#description" role="tab">Description</a>
 						</li>
 
 						<li class="nav-item p-b-10">
 							<a class="nav-link" data-toggle="tab" href="#information" role="tab">Additional information</a>
-						</li>
+						</li> --}}
 
 						<li class="nav-item p-b-10">
-							<a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Reviews (1)</a>
+							<a class="nav-link active" data-toggle="tab" href="#reviews" role="tab">Reviews (1)</a>
 						</li>
 					</ul>
 
 					<!-- Tab panes -->
 					<div class="tab-content p-t-43">
 						<!-- - -->
-						<div class="tab-pane fade show active" id="description" role="tabpanel">
+						{{-- <div class="tab-pane fade show active" id="description" role="tabpanel">
 							<div class="how-pos2 p-lr-15-md">
 								<p class="stext-102 cl6">
 									Aenean sit amet gravida nisi. Nam fermentum est felis, quis feugiat nunc fringilla sit amet. Ut in blandit ipsum. Quisque luctus dui at ante aliquet, in hendrerit lectus interdum. Morbi elementum sapien rhoncus pretium maximus. Nulla lectus enim, cursus et elementum sed, sodales vitae eros. Ut ex quam, porta consequat interdum in, faucibus eu velit. Quisque rhoncus ex ac libero varius molestie. Aenean tempor sit amet orci nec iaculis. Cras sit amet nulla libero. Curabitur dignissim, nunc nec laoreet consequat, purus nunc porta lacus, vel efficitur tellus augue in ipsum. Cras in arcu sed metus rutrum iaculis. Nulla non tempor erat. Duis in egestas nunc.
 								</p>
 							</div>
-						</div>
+						</div> --}}
 
 						<!-- - -->
-						<div class="tab-pane fade" id="information" role="tabpanel">
+						{{-- <div class="tab-pane fade" id="information" role="tabpanel">
 							<div class="row">
 								<div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
 									<ul class="p-lr-28 p-lr-15-sm">
@@ -247,10 +273,10 @@
 									</ul>
 								</div>
 							</div>
-						</div>
+						</div> --}}
 
 						<!-- - -->
-						<div class="tab-pane fade" id="reviews" role="tabpanel">
+						<div class="tab-pane fade show active" id="reviews" role="tabpanel">
 							<div class="row">
 								<div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
 									<div class="p-b-30 m-lr-15-sm">

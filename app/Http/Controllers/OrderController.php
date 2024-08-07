@@ -56,48 +56,20 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function reject( Request $request ){
+        $validation = $request->validate([
+            "order_id" => "required|exists:orders,id",
+            "rejection_message" => "required"
+        ]);
+        if($validation) Order::Where( "id", $validation["order_id"])->update(["status" => 2, "rejection_message" => $validation["rejection_message"]]);
+        return redirect()->back();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function accept( Request $request ){
+        $validation = $request->validate([
+            "order_id" => "required|exists:orders,id"
+        ]);
+        if($validation) Order::find($validation["order_id"])->update(["status" => 3]);
+        return redirect()->back();
     }
 }

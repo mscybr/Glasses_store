@@ -40,11 +40,12 @@ class UserDashboard extends Controller
      */
     public function destroy_billing_address(Request $request)
     {
-        $validation = $request->validate([
-            "item_id" => "exists:billing_address,id"
-        ]);
-        $id = $request->item_id;
-        BillingAddress::destroy($id);
+        // METHOD ARCHIVED -REASON => TO PREVENT ORDER DELETION
+        // $validation = $request->validate([
+        //     "item_id" => "exists:billing_address,id"
+        // ]);
+        // $id = $request->item_id;
+        // BillingAddress::destroy($id);
         return redirect()->back();
     }
 }

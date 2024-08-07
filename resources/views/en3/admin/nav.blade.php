@@ -62,7 +62,7 @@
                     <div class="header__right">
                         <div class="header__right__auth">
                              @guest
-                                 <a href="{{route("login_form")}}">Login</a>
+                                 <a href="{{route("login")}}">Login</a>
                                 <a href="{{route("register_form")}}">Register</a>
                             @endguest
                             @auth

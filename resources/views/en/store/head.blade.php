@@ -24,6 +24,12 @@
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href={{asset("assets/vendor/perfect-scrollbar/perfect-scrollbar.css")}}>
 <!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/MagnificPopup/magnific-popup.css")}}>
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/slick/slick.css")}}>
+<!--===============================================================================================-->
+<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/daterangepicker/daterangepicker.css")}}>
+<!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href={{asset("assets/css/util.css")}}>
 <link rel="stylesheet" type="text/css" href={{asset("assets/css/main.css")}}>
 <!--===============================================================================================-->

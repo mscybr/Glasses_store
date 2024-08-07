@@ -4,7 +4,7 @@
 	<!-- breadcrumb -->
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-			<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+			<a href="{{route("shop")}}" class="stext-109 cl8 hov-cl1 trans-04">
 				Home
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>
@@ -41,7 +41,7 @@
                                     $thumbnail_array = explode("/", $thumb);
                                     $thumbnail = $thumbnail_array[ sizeof($thumbnail_array) -1 ];
                                     $price = $item->product->price - ( $item->product->price * $item->product->sale);
-									$total += $price;
+									$total += $price * $item->amount;
                                 @endphp
                                     <tr class="table_row">
                                         <td class="column-1">
@@ -94,6 +94,8 @@
 				</div>
 
 				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+					<form action="{{route("send_to_check_out")}}" method="post">
+
 					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
 						<h4 class="mtext-109 cl2 p-b-30">
 							Cart Totals
@@ -175,14 +177,33 @@
 								</span>
 							</div>
 						</div>
+						<div class="flex-w flex-t p-t-27 p-b-33">
+							<div class="size-208">
+								<span class="mtext-101 cl2">
+									Address:
+								</span>
+							</div>
 
-						<form action="{{route("send_to_check_out")}}" method="post">
+							<div class="size-209 p-t-1">
+								<div class="rs1-select2 bor8 bg0">
+									<select class="js-select2" name="address">
+										<option selected disabled>Choose an option</option>
+										@foreach ( Auth::user()->billing_addresses as $address )
+										<option value={{$address->id}}>{{ $address->address }}</option>
+										@endforeach
+									</select>
+									<div class="dropDownSelect2"></div>
+								</div>
+							</div>
+						</div>
+
 							@csrf
 							<button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
 								Proceed to Checkout
 							</button>
-						</form>
 					</div>
+				</form>
+
 				</div>
 			</div>
 		</div>

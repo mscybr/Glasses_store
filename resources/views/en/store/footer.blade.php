@@ -169,7 +169,22 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		})
 	</script>
 <!--===============================================================================================-->
-	<script src={{asset("assets/vendor/MagnificPopup/jquery.magnific-popup.min.js")}}></script>
+<script src={{asset("assets/vendor/daterangepicker/moment.min.js")}}></script>
+<script src={{asset("assets/vendor/daterangepicker/daterangepicker.js")}}></script>
+<!--===============================================================================================-->
+<script src={{asset("assets/vendor/slick/slick.min.js")}}></script>
+<script src={{asset("assets/js/slick-custom.js")}}></script>
+<!--===============================================================================================-->
+<script src={{asset("assets/vendor/isotope/isotope.pkgd.min.js")}}></script>
+<!--===============================================================================================-->
+<script src={{asset("assets/vendor/sweetalert/sweetalert.min.js")}}></script>
+<!--===============================================================================================-->
+<script src={{asset("assets/vendor/parallax100/parallax100.js")}}></script>
+<script>
+	$('.parallax100').parallax100();
+</script>
+<!--===============================================================================================-->
+<script src={{asset("assets/vendor/MagnificPopup/jquery.magnific-popup.min.js")}}></script>
 <!--===============================================================================================-->
 	<script src={{asset("assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js")}}></script>
 	<script>

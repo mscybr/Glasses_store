@@ -100,9 +100,15 @@ class CartController extends Controller
         return redirect()->back();
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        Order::Where("user_id", "=", Auth::user()->id)->update(["status"=>1]);
-        return $this->index();
+        $validation = $request->validate([
+            "address" => "required|exists:billing_address,id"
+        ]);
+        if($validation ){
+            // dd($validation);
+            Order::Where([["user_id", "=", Auth::user()->id], ["status", "=", 0]])->update(["status"=>1, "billing_address_id" => $validation["address"]]);
+        }
+        return redirect(route("cart_items"));
     }
 }

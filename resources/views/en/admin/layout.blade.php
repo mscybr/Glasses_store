@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('en.admin.head')
+    @include('en.store.head')
 </head>
 <body class="animsition">
 
-    @include("en.admin.nav")
+    @include("en.store.nav")
     @yield("content")
-    @include("en.admin.footer")
+    @include("en.store.footer")
 
 </body>
 </html>

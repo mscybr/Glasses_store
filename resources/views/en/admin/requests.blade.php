@@ -107,17 +107,18 @@
 											<td class="column-6">{{ $order->price }}</td>
 											<td class="column-7">{{ $order->price * $order->amount }}</td>
 											<td class="column-8">
-												<form action="{{route("delete_product")}}" method="post">
+												<form action="{{route("accept_order")}}" method="post">
 													@csrf
-													<input type="hidden" name="item_id" value="{{$order->id}}"> 
-													<input type="submit" value="delete" class="btn btn-danger">
+													<input type="hidden" name="order_id" value="{{$order->id}}"> 
+													<input type="submit" value="accept" class="btn btn-success">
 												</form>
 											</td>
 											<td class="column-9">
-												<form action="{{route("delete_product")}}" method="post">
+												<form action="{{route("reject_order")}}" method="post">
 													@csrf
-													<input type="hidden" name="item_id" value="{{$order->id}}"> 
-													<input type="submit" value="delete" class="btn btn-danger">
+													<input type="hidden" name="order_id" value="{{$order->id}}"> 
+													<input type="submit" value="reject" class="btn btn-danger">
+													<input type="text" name="rejection_message" placeholder="rejection message" class="mt-2 form-control">
 												</form>
 											</td>
 									</tr>

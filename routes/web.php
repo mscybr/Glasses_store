@@ -27,7 +27,7 @@ use App\Http\Controllers\SubcategoryController;
 
 Route::get('/logout', [UserController::class, "logout"])->name("logout");
 Route::get('/register', [UserController::class, "create"])->name("register_form");
-Route::get('/login', [UserController::class, "login"])->name("login_form");
+Route::get('/login', [UserController::class, "login"])->name("login");
 Route::post('/authenticate', [UserController::class, "authenticate"])->name("authenticate");
 Route::post('/register', [UserController::class, "store"])->name("register");
 
@@ -50,6 +50,8 @@ Route::group(["middleware" => "is.logged"], function(){
 Route::group(["middleware" => "is.admin"], function(){
 
     Route::get("orders", [CartController::class, "requests"])->name("orders");
+    Route::post("orders/order/accept", [OrderController::class, "accept"])->name("accept_order");
+    Route::post("orders/order/reject", [OrderController::class, "reject"])->name("reject_order");
 
     Route::get("brand/create", [BrandController::class, "create"])->name("brand_form");
     Route::post("brand/create", [BrandController::class, "store"])->name("brand_store");

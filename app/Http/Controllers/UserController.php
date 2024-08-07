@@ -41,13 +41,22 @@ class UserController extends Controller
             'email' => ["required", "email"],
             'password' => ["required", "min:6"],
         ]);
-       
-        if( Auth::attempt($fields)){
-            $request->session()->regenerate();
 
-            return redirect()->route("shop");
+        if( $request["is_api"] ){
+            if( $token = auth("api")->attempt($fields) ){
+                return $this->respondWithToken($token);
+            }else{
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
         }else{
-            return redirect()->back()->withErrors(trans("auth.failed"))->withInput();;
+
+            if(  auth()->attempt($fields) ){
+                $request->session()->regenerate();
+                return redirect()->route("shop");
+            }else{
+                return redirect()->back()->withErrors(trans("auth.failed"))->withInput();;
+            }
         }
     }
 
@@ -57,7 +66,22 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route("shop");
+        if( $request["is_api"] ){
+            return response()->json(['message' => 'Successfully logged out']);
+        }else{
+            return redirect()->route("shop");
+        }
+    }
+
+
+    public function refresh()
+    {
+        return $this->respondWithToken(auth("api")->refresh());
+    }
+
+    public function me()
+    {
+        return response()->json(auth("api")->user());
     }
 
 
@@ -84,6 +108,22 @@ class UserController extends Controller
         $new_user = User::create($fields);
         auth()->login($new_user);
         return redirect()->route('shop');
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth("api")->factory()->getTTL() * 60
+        ]);
     }
 
 }

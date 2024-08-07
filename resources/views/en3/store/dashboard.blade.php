@@ -93,7 +93,7 @@
 						<th >Street</th>
 						<th >Address</th>
 						<th >Phone</th>
-						<th >Delete</th>
+						{{-- <th >Delete</th> --}}
 					</tr>
 				</thead>
 				<tbody>
@@ -107,13 +107,13 @@
 							<td >{{ $item->address }}</td>
 							<td >{{ $item->phone }}</td>
 							
-							<td>
+							{{-- <td>
 								<form action="{{route("delete_billing_address")}}" method="post">
 									@csrf
 									<input type="hidden" name="item_id" value="{{$item->id}}"> 
 									<input type="submit" value="delete" class="btn btn-danger">
 								</form>
-							</td>
+							</td> --}}
 						</tr>
 					@endforeach
 				</tbody>

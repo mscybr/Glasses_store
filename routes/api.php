@@ -24,11 +24,11 @@ Route::group([
 
     // informing all controllers that this request is an api
     $request["is_api"] = true;
-    Route::post('login', 'UserController@authenticate');
-    Route::post('logout', 'UserController@logout');
+    Route::post('login', [UserController::class, "authenticate"]);
+    Route::post('logout', [UserController::class , "logout"]);
 
-    Route::post('refresh', 'UserController@refresh')->middleware(['auth:api']);
-    Route::post('me', 'UserController@me')->middleware(["auth:api"]);
+    Route::post('refresh', [UserController::class , "refresh"])->middleware(['auth:api']);
+    Route::post('me', [UserController::class , "me"])->middleware(["auth:api"]);
 
 });
 

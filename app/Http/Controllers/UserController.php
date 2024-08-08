@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-
+    
+    private function is_api($request){
+        return strpos( $request->getRequestUri(), "/api") > 0;
+    }
     
 
     public function login()
@@ -36,13 +39,20 @@ class UserController extends Controller
     }
 
     public function authenticate(Request $request){
-        // dd(auth());
-        $fields = $request->validate([
-            'email' => ["required", "email"],
-            'password' => ["required", "min:6"],
-        ]);
+    
+        try {
 
-        if( $request["is_api"] ){
+            $fields = $request->validate([
+                'email' => ["required", "email","exists:users,email"],
+                'password' => ["required", "min:6"],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $th) {
+            if( $this->is_api($request) ){
+                return response()->json(['error' => 'Bad Request', "error_fields" => $th->validator->errors()], 400);
+            }
+        }
+        
+        if( $this->is_api($request) ){
             if( $token = auth("api")->attempt($fields) ){
                 return $this->respondWithToken($token);
             }else{
@@ -61,14 +71,15 @@ class UserController extends Controller
     }
 
     public function logout(Request $request){
-        auth()->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
-        if( $request["is_api"] ){
+        if( $this->is_api($request) ){
+            auth("api")->logout();
             return response()->json(['message' => 'Successfully logged out']);
         }else{
+        auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
             return redirect()->route("shop");
         }
     }

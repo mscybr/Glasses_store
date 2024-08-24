@@ -22,9 +22,9 @@ Route::group([
 
 ], function ($router) {
 
-    // informing all controllers that this request is an api
-    $request["is_api"] = true;
+
     Route::post('login', [UserController::class, "authenticate"]);
+    Route::post('register', [UserController::class, "store"]);
     Route::post('logout', [UserController::class , "logout"])->middleware(['auth:api']);
 
     Route::post('refresh', [UserController::class , "refresh"])->middleware(['auth:api']);

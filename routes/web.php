@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SiteConfigController;
@@ -44,6 +45,7 @@ Route::group(["middleware" => "is.logged"], function(){
     Route::post("cart/checkout", [CartController::class, "checkout"])->name("send_to_check_out");
     Route::post("order/create", [OrderController::class, "store"])->name("store_order");
     Route::post("cart/delete", [CartController::class, "destroy"])->name("delete_cart");
+    Route::post("review", [ReviewController::class, "store"])->name("add_review");
 });
 
 // admin

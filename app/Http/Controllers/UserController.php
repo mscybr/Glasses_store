@@ -104,21 +104,31 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $fields = $request->validate([
-            'name' => ["required", "string", "min:3"],
-            'email' => ["required", "email", Rule::unique("users", "email")],
-            'password' => ["required", "confirmed", "min:6"],
-            'countryCode' => ["required", "numeric"],
-            'number' => ["required", "numeric"],
-        ]);
+        try {
+            $fields = $request->validate([
+                'name' => ["required", "string", "min:3"],
+                'email' => ["required", "email", Rule::unique("users", "email")],
+                'password' => ["required", "confirmed", "min:6"],
+                'countryCode' => ["required", "numeric"],
+                'number' => ["required", "numeric"],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $th) {
+            if( $this->is_api($request) ){
+                return response()->json(['error' => 'Bad Request', "error_fields" => $th->validator->errors()], 400);
+            }
+        }
         $fields["number"] = $fields["countryCode"].$fields["number"];
         $fields["role"] = "admin";
         $fields["password"] = bcrypt($fields["password"]);
         unset($fields["countryCode"]);
         // dd($fields);
         $new_user = User::create($fields);
-        auth()->login($new_user);
-        return redirect()->route('shop');
+        if( $this->is_api($request) ){
+            return $this->respondWithToken(auth("api")->login($new_user));
+        }else{
+            auth()->login($new_user);
+            return redirect()->route('shop');
+        }
     }
 
     /**

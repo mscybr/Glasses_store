@@ -6,6 +6,7 @@ use App\Models\Lens;
 use App\Models\Size;
 use App\Models\Brand;
 use App\Models\Color;
+use App\Models\Review;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Subcategory;
@@ -27,7 +28,12 @@ class ProductController extends Controller
         if( $validation == false ) return redirect()->route("shop");
 
         $product = Product::find($product_id);
-        return view("en.store.product", ["product" => $product]);
+        $related_query = Product::latest();
+        $related_prods = $related_query->where("category_id", "=", $product->category_id )->Where("id", "!=", $product_id)->get();
+        // dd();
+        $related_query = $related_prods->random( $related_prods->count() >= 5 ? 5 : $related_prods->count());
+        // ddd($related_query);
+        return view("en.store.product", ["product" => $product, "related" => $related_query, "reviews" => Review::latest()->Where("product_id", "=", $product_id)->get()]);
     }
     /**
      * Display a listing of the resource.
@@ -36,12 +42,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-
+        
         // ddd(Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get());
-        return view(
+         return view(
             "en.store.shop",
             [
-                "products" => Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get(),
+                "products" => Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->paginate(3),
                 "categories" =>  Category::latest()->get(),
                 "subcategories" =>  Subcategory::latest()->get(),
                 "brands" =>  Brand::latest()->get(),
@@ -50,6 +56,7 @@ class ProductController extends Controller
                 "sizes" =>  Size::latest()->get(),
             ]
         );
+        // ddd(1);
 
     }
 

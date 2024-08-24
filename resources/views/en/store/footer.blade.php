@@ -8,29 +8,17 @@
 					</h4>
 
 					<ul>
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Women
-							</a>
-						</li>
+						@php
+							$categories = App\Models\Category::all();
+						@endphp
+						@foreach ($categories as $category)
+							<li class="p-b-10">
+								<a href="{{route("shop", ["Category" =>$category->id])}}" class="stext-107 cl7 hov-cl1 trans-04">
+									{{$category->categoryName}}
+								</a>
+							</li>
+						@endforeach
 
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Men
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shoes
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Watches
-							</a>
-						</li>
 					</ul>
 				</div>
 
@@ -46,11 +34,6 @@
 							</a>
 						</li>
 
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Returns 
-							</a>
-						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
@@ -59,8 +42,8 @@
 						</li>
 
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								FAQs
+							<a href="" class="stext-107 cl7 hov-cl1 trans-04">
+								Contact
 							</a>
 						</li>
 					</ul>
@@ -90,7 +73,7 @@
 					</div>
 				</div>
 
-				<div class="col-sm-6 col-lg-3 p-b-50">
+				{{-- <div class="col-sm-6 col-lg-3 p-b-50">
 					<h4 class="stext-301 cl0 p-b-30">
 						Newsletter
 					</h4>
@@ -107,7 +90,7 @@
 							</button>
 						</div>
 					</form>
-				</div>
+				</div> --}}
 			</div>
 
 			<div class="p-t-40">
@@ -134,9 +117,6 @@
 				</div>
 
 				<p class="stext-107 cl6 txt-center">
-					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 
 				</p>
 			</div>

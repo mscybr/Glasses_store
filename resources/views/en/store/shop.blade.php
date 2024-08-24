@@ -132,14 +132,17 @@
 				
 				<!-- Search product -->
 				<div class="dis-none panel-search w-full p-t-10 p-b-15">
+					<form  method="get">
 					<div class="bor8 dis-flex p-l-15">
-						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-							<i class="zmdi zmdi-search"></i>
-						</button>
 
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
-					</div>	
-				</div>
+							<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+								<i class="zmdi zmdi-search"></i>
+							</button>
+							
+							<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="Search" placeholder="Search">
+						</div>	
+					</form>
+					</div>
 
 				<!-- Filter -->
 				<div class="dis-none panel-filter w-full p-t-10">
@@ -251,11 +254,22 @@
 								Sizes
 							</div>
 							<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
+								@foreach (request()->all() as $key=> $item)
+										@if ( $key != "Size" )
+											@if ( is_array($item) )
+												@foreach ($item as $query_param_key => $query_param)
+													<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+												@endforeach
+											@else
+												<input type="hidden" name="{{"$key"}}" value="{{$item}}">
+											@endif
+										@endif
+									@endforeach
 								{{-- <ul> --}}
 									@foreach ($sizes as $size)
 										{{-- <li class="p-b-6"> --}}
 											<div class="mb-3 form-check col-12">
-												<input type="checkbox" class="form-check-input" id="exampleCheck1" name="Size[{{$size->id}}]" value="{{$size->id}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->id, request()->all()["Size"])) ? ' checked' : '' }}>
+												<input type="checkbox" class="form-check-input" id="exampleCheck1" name="Size[{{$size->id}}]" value="{{$size->sizeName}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->sizeName, request()->all()["Size"])) ? ' checked' : '' }}>
 												<label class="form-check-label" for="exampleCheck1">{{$size->sizeName}}</label>
 											  </div>
 										{{-- </li> --}}
@@ -288,7 +302,7 @@
 									@foreach ($colors as $color)
 										{{-- <li class="p-b-6"> --}}
 											<div class="mb-3 form-check col-12">
-												<input type="checkbox" class="form-check-input" id="exampleCheck1" name="Color[{{$color->id}}]" value="{{$color->id}}" {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->id, request()->all()["Color"])) ? ' checked' : '' }}>
+												<input {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->colorName, request()->all()["Color"])) ? ' checked' : '' }} type="checkbox" class="form-check-input" id="exampleCheck1" name="Color[{{$color->id}}]" value="{{$color->colorName}}" {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->id, request()->all()["Color"])) ? ' checked' : '' }}>
 												<label class="form-check-label" for="exampleCheck1"> {{$color->colorName}}</label>
 											  </div>
 										{{-- </li> --}}
@@ -301,7 +315,7 @@
 							</form>
 						</div>
 
-{{-- 						
+{{--
 						<div class="filter-col3 p-r-15 p-b-27">
 							<div class="mtext-102 cl2 p-b-15">
 								Color
@@ -370,7 +384,7 @@
 							</ul>
 						</div>
 						 --}}
-					
+
 					</div>
 				</div>
 			</div>
@@ -390,9 +404,9 @@
 						<div class="block2-pic hov-img0">
 							<img src="{{$thumbnail_src}}" alt="IMG-PRODUCT">
 
-							<a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+							{{-- <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
 								Quick View
-							</a>
+							</a> --}}
 						</div>
 
 						<div class="block2-txt flex-w flex-t p-t-14">
@@ -406,12 +420,12 @@
 								</span>
 							</div>
 
-							<div class="block2-txt-child2 flex-r p-t-3">
+							{{-- <div class="block2-txt-child2 flex-r p-t-3">
 								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
 									<img class="icon-heart1 dis-block trans-04" src="{{asset("assets/images/icons/icon-heart-01.png")}}" alt="ICON">
 									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset("assets/images/icons/icon-heart-02.png")}}" alt="ICON">
 								</a>
-							</div>
+							</div> --}}
 						</div>
 					</div>
 				</div>
@@ -421,9 +435,10 @@
 
 			<!-- Load more -->
 			<div class="flex-c-m flex-w w-full p-t-45">
-				<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+				{{ $products->links() }}
+				{{-- <a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
 					Load More
-				</a>
+				</a> --}}
 			</div>
 		</div>
 	</div>

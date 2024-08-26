@@ -184,12 +184,7 @@
 									{{ $product->name }}
 								</td> --}}
 								<td class="column-1">
-									<form action="{{route("store_order")}}" method="post">
-										@csrf
-										<input type="hidden" name="amount" value="1">
-										<input type="hidden" name="product_id" value="{{$product->id}}">
-									  <button type="submit">{{ $product->name }}</button>	
-									</form>
+									<a href="{{route("product", ["product_id" => $product->id])}}" >{{ $product->name }}</a>	
 								</td>
 								<td class="column-2">{{ $product->category->categoryName.( isset( $product->subcategory_id ) ? " / ".$product->subcategory->subcategoryName : "" ) }}</td>
 								<td class="column-3">{{$product->brand->brandName}}</td>

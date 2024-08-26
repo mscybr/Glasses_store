@@ -33,6 +33,8 @@ Route::post('/authenticate', [UserController::class, "authenticate"])->name("aut
 Route::post('/register', [UserController::class, "store"])->name("register");
 
 Route::get("shop", [ProductController::class, "index"])->name("shop");
+Route::get("about", function(){ return view("en.store.about"); })->name("about");
+Route::get("contact", function(){ return view("en.store.contact"); })->name("contact");
 Route::get("shop/product/{product_id}", [ProductController::class,  "show"] )->name("product");
 
 

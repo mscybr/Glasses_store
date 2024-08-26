@@ -42,12 +42,20 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // delete products that have their subcate removed
+        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get();
+        foreach ($products as $product ) {
+            if( isset($product->subcategory_id) && $product->subcategory == null ) $product->delete();
+            if(  $product->category == null ) $product->delete();
+          
+        }
+        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]));
         
         // ddd(Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get());
          return view(
             "en.store.shop",
             [
-                "products" => Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->paginate(3),
+                "products" => $products->paginate(12),
                 "categories" =>  Category::latest()->get(),
                 "subcategories" =>  Subcategory::latest()->get(),
                 "brands" =>  Brand::latest()->get(),
@@ -67,6 +75,15 @@ class ProductController extends Controller
      */
     public function create()
     {
+        // delete products that have their subcate removed
+        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get();
+        foreach ($products as $product ) {
+            if( isset($product->subcategory_id) && $product->subcategory == null ) $product->delete();
+            if(  $product->category == null ) $product->delete();
+          
+        }
+        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]));
+        
         return view("en.admin.create_product", [
             "categories" =>  Category::latest()->get(),
             "subcategories" =>  Subcategory::latest()->get(),
@@ -74,7 +91,7 @@ class ProductController extends Controller
             "lenses" =>  Lens::latest()->get(),
             "colors" =>  Color::latest()->get(),
             "sizes" =>  Size::latest()->get(),
-            "products"=> Product::latest()->get()
+            "products"=>$products->get()
         ]);
     }
 

@@ -1,0 +1,33 @@
+[8:19 PM, 6/24/2024] لحسن قنان: 3- ربط الموقع مع شركات شحن للحصول على معلومات الشحنة اوتوماتيكيا بواسطة api خاص بكل شركة 
+الشكرات هي: خمسة، بوسطة، ارامكس، dhl
+
+-Same design
+-Payment( Mada, Apple Pay, Taby, Tamara )
+-Shipment
+-Multi-Currency( define currency and price in admin )
+-Multi-Lang
+-Auto-Translate Product info
+-Automatic address or manual set up
+-OTP, Promotion via WA, sms
+-SEO
+-PEOPLE WHO LEFT A PRODUCT IN CART AND WENT OUT FOR 15 MINS THEY RECIEVE AN EMAIL, WHATS APP WITH A PROMOTION CODE AVALIABLE FOR ONE HOUR
+-THESE PROMOTION CODES APPEAR IN THE ADMIN PANEL WITH THEIR STATUS WETHER THEY WERE USED OR NOT
+-MASS SENDING FOR WA,SMS,EMAIL FOR ALL USERS
+-WHEN USING THE SITE FROM A MOBILE A DOWNLOAD ICON APPEAR WITH THE APP
+-CONNECT ACCOUNT WITH AMAZON AND NOON FOR PRODUCT SYNCING
+
+
+one change of billing_addres notify admin
+prevent billing_addres from being deleted
+
+
+WHEN UPLOADING
+CHECK THE PREMISIONS FOR BOTH STORAGE AND EVERYTHING
+ALSO MAKE SYMLINK USING THIS SCRIPT
+
+<?php
+$original = '/home/nytetgvq/public_html/Glasses_store/storage/app/public';
+$copy = '/home/nytetgvq/public_html/Glasses_store/public/storage';
+symlink($original, $copy);
+echo 'done';
+?>

@@ -17,6 +17,17 @@
 -CONNECT ACCOUNT WITH AMAZON AND NOON FOR PRODUCT SYNCING
 
 
+Sidebar:
+--Color
+--Brand
+--Size
+--Stock
+-Top Rated Products
+-Price
+
+
+when an item is bought the stock of the product is decreased
+
 one change of billing_addres notify admin
 prevent billing_addres from being deleted
 

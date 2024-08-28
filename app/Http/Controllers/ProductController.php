@@ -43,16 +43,14 @@ class ProductController extends Controller
     public function index()
     {
         // delete products that have their subcate removed
-        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get();
+        $products = Product::latest()->filter(request(["Stock", "Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get();
         foreach ($products as $product ) {
             if( isset($product->subcategory_id) && $product->subcategory == null ) $product->delete();
             if(  $product->category == null ) $product->delete();
-          
         }
-        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]));
-        
+        $products = Product::latest()->filter(request(["Stock", "Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]));
         // ddd(Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get());
-         return view(
+        return view(
             "en.store.shop",
             [
                 "products" => $products->paginate(12),
@@ -143,6 +141,36 @@ class ProductController extends Controller
         }
     }
 
+    public function edit_inventory (Request $request)
+    {
+        $request->validate([
+            "stock" => "required"
+        ]);
+        foreach( $request->stock as $key => $amount ){
+            $product = Product::find($key);
+            // dd($product);
+            $product->update(["stock"=>$amount]);
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function inventory(Request $request)
+    {
+        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]))->get();
+        foreach ($products as $product ) {
+            if( isset($product->subcategory_id) && $product->subcategory == null ) $product->delete();
+            if(  $product->category == null ) $product->delete();
+        }
+        $products = Product::latest()->filter(request(["Category", "Subcategory", "Brand", "Sale", "Size", "Color", "MinPrice", "MaxPrice", "Search"]));
+
+        return view("en.admin.inventory", ["products"=>$products->get()]);
+    }
 
     /**
      * Show the form for editing the specified resource.

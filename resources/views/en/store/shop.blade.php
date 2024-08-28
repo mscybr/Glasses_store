@@ -14,7 +14,6 @@
 						<i class="zmdi zmdi-close"></i>
 					</div>
 				</div>
-				
 				<div class="header-cart-content flex-w js-pscroll">
 					<ul class="header-cart-wrapitem w-full">
 						<li class="header-cart-item flex-w flex-t m-b-12">
@@ -87,7 +86,7 @@
 
 		
 		<!-- Product -->
-							<section class="section-slide">
+		<section class="section-slide">
 							<div class="wrap-slick1 rs1-slick1">
 								<div class="slick1">
 									<div class="item-slick1" style="background-position-y: 2px;background-image: url({{asset("assets/images/slide-02.jpg")}});">
@@ -198,7 +197,7 @@
 
 
 					<div class="flex-w flex-c-m m-tb-10">
-						<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+						<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter d-sm-none">
 							<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
 							<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
 							Filter
@@ -248,7 +247,7 @@
 							$request_array = request()->all();
 							if( isset( $request_array["Subcategory"] ) ) unset($request_array["Subcategory"]);
 							if( isset( $request_array["Category"] ) ) unset($request_array["Category"]);
-						@endphp
+							@endphp
 						<div class="filter-col4 p-b-27">
 							<div class="mtext-102 cl2 p-b-15">
 								Categories
@@ -264,6 +263,21 @@
 								@endforeach
 							</div>
 						</div>
+						<div class="filter-col4 p-b-27">
+							<div class="mtext-102 cl2 p-b-15">
+								Stock
+							</div>
+
+							<div class="flex-w p-t-4 m-r--5">
+								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => 1], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+									In-Stock
+								</a>
+								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => null], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+									All Items
+								</a>
+							</div>
+						</div>
+
 						<div class="filter-col4 p-b-27">
 							<div class="mtext-102 cl2 p-b-15">
 								Subcategories
@@ -285,7 +299,7 @@
 								@endforeach
 							</div>
 						</div>
-	{{-- 
+						{{-- 
 							<div class="filter-col2 p-r-15 p-b-27">
 								<div class="mtext-102 cl2 p-b-15">
 									Price
@@ -468,7 +482,7 @@
 
 						</div>
 					</div>
-					<div class="d-flex">
+					{{-- <div class="d-flex m-t-10">
 						<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
 							All
 						</a>
@@ -477,50 +491,151 @@
 								{{ $category->categoryName }}
 							</a>
 						@endforeach
-					</div>
+					</div> --}}
 				</div>
-	
-				<div class="row isotope-grid">
-					@foreach ($products as $product)
-						@php
-							$thumb = explode(",", $product->images)[0];
-							$thumbnail_array = explode("/", $thumb);
-							$thumbnail = $thumbnail_array[ sizeof($thumbnail_array) -1 ];
-							$thumbnail_src = asset("storage/images/$thumbnail");
-						@endphp
-					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-						<!-- Block2 -->
-						<div class="block2">
-							<div class="block2-pic hov-img0">
-								<img src="{{$thumbnail_src}}" alt="IMG-PRODUCT">
 
-								{{-- <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-									Quick View
-								</a> --}}
-							</div>
+				<div class="d-flex">
 
-							<div class="block2-txt flex-w flex-t p-t-14">
-								<div class="block2-txt-child1 flex-col-l ">
-									<a href="{{route("product", ["product_id" => $product->id])}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-										{{$product->name}}
-									</a>
+					<div class="col-sm-3 p-l-10 p-r-40 d-sm-block d-none">
+						<h5 class="m-b-15">Categories</h5>
+						<ul >
+							<li>						
+								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">All</a>
+							</li>
+							@foreach ($categories as $category)
+								<li class="m-b-5">
+									<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => $category->id], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >{{ $category->categoryName }}</a>
+									<?php if(  $category->subcategory != null ){?>
+										<ul class="p-l-10">
+											@foreach ($category->subcategory as $subcategory)
+												<li class="m-b-5">
+													<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategroy' => $subcategory->id], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >{{ $subcategory->subcategoryName }}</a>
+												</li>
+											@endforeach
+										</ul>
+									<?php } ?>
 
-									<span class="stext-105 cl3">
-										${{$product->price - ( $product->sale * $product->price )}}
-									</span>
+								</li>
+							@endforeach
+						</ul>
+						<hr>
+						<h5 class="m-b-15">Brands</h5>
+						<ul >
+							@foreach ($brands as $brand)
+								<li class="m-b-5">
+									<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Brand' => $brand->id]) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >{{ $brand->brandName }}</a>
+								</li>
+							@endforeach
+						</ul>
+						<hr>
+						<h5 class="m-b-15">Colors</h5>
+						<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
+								@foreach (request()->all() as $key=> $item)
+									@if ( $key != "Color" )
+										@if ( is_array($item) )
+											@foreach ($item as $query_param_key => $query_param)
+												<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+											@endforeach
+										@else
+											<input type="hidden" name="{{"$key"}}" value="{{$item}}">
+										@endif
+									@endif
+								@endforeach
+								@foreach ($colors as $color)
+									{{-- <li class="p-b-6"> --}}
+										<div class="mb-3 form-check col-12">
+											<input {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->colorName, request()->all()["Color"])) ? ' checked' : '' }} type="checkbox" class="form-check-input" id="exampleCheck1" name="Color[{{$color->id}}]" value="{{$color->colorName}}" {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->id, request()->all()["Color"])) ? ' checked' : '' }}>
+											<label class="form-check-label" for="exampleCheck1"> {{$color->colorName}}</label>
+										</div>
+									{{-- </li> --}}
+								@endforeach
+							<button type="submit"  class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								Filter
+							</button>
+						</form>
+						<hr>
+						<h5 class="m-b-15">Sizes</h5>
+						<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
+								@foreach (request()->all() as $key=> $item)
+								@if ( $key != "Size" )
+									@if ( is_array($item) )
+										@foreach ($item as $query_param_key => $query_param)
+											<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+										@endforeach
+									@else
+										<input type="hidden" name="{{"$key"}}" value="{{$item}}">
+									@endif
+								@endif
+							@endforeach
+							@foreach ($sizes as $size)
+							{{-- <li class="p-b-6"> --}}
+								<div class="mb-3 form-check col-12">
+									<input type="checkbox" class="form-check-input" id="exampleCheck1" name="Size[{{$size->id}}]" value="{{$size->sizeName}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->sizeName, request()->all()["Size"])) ? ' checked' : '' }}>
+									<label class="form-check-label" for="exampleCheck1">{{$size->sizeName}}</label>
 								</div>
+							{{-- </li> --}}
+							@endforeach
+							<button type="submit"  class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								Filter
+							</button>
+						</form>
+						<hr>
+						<h5 class="m-b-15">Stock</h5>
+						<ul>
+							<li class="m-b-5">
+								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => 1], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >In Stock</a>
+							</li>
+							<li class="m-b-5">
+								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => null], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >All Items</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-sm-9 col-12">
 
-								{{-- <div class="block2-txt-child2 flex-r p-t-3">
-									<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<img class="icon-heart1 dis-block trans-04" src="{{asset("assets/images/icons/icon-heart-01.png")}}" alt="ICON">
-										<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset("assets/images/icons/icon-heart-02.png")}}" alt="ICON">
-									</a>
-								</div> --}}
+						<div class="row isotope-grid">
+							@foreach ($products as $product)
+								@php
+									$thumb = explode(",", $product->images)[0];
+									$thumbnail_array = explode("/", $thumb);
+									$thumbnail = $thumbnail_array[ sizeof($thumbnail_array) -1 ];
+									$thumbnail_src = asset("storage/images/$thumbnail");
+								@endphp
+								
+							<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+								<!-- Block2 -->
+								<div class="block2">
+									<div class="block2-pic hov-img0">
+										<img src="{{$thumbnail_src}}" alt="IMG-PRODUCT">
+
+										{{-- <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+											Quick View
+										</a> --}}
+									</div>
+
+									<div class="block2-txt flex-w flex-t p-t-14">
+										<div class="block2-txt-child1 flex-col-l ">
+											<a href="{{route("product", ["product_id" => $product->id])}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+												{{$product->name}}
+											</a>
+
+											<span class="stext-105 cl3">
+												${{$product->price - ( $product->sale * $product->price )}}
+											</span>
+										</div>
+
+										{{-- <div class="block2-txt-child2 flex-r p-t-3">
+											<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+												<img class="icon-heart1 dis-block trans-04" src="{{asset("assets/images/icons/icon-heart-01.png")}}" alt="ICON">
+												<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset("assets/images/icons/icon-heart-02.png")}}" alt="ICON">
+											</a>
+										</div> --}}
+									</div>
+								</div>
 							</div>
+							@endforeach
+
 						</div>
 					</div>
-					@endforeach
-
 				</div>
 
 				<!-- Load more -->

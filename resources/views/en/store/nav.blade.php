@@ -58,6 +58,7 @@
 											<li><a href="{{route("category_form")}}">Category</a></li>
 											<li><a href="{{route("site_config_form")}}">Site Confirgurations</a></li>
 											<li><a href="{{route("product_form")}}">Product</a></li>
+											<li><a href="{{route("inventory")}}">Inventory</a></li>
 											<li><a href="{{route("orders")}}">Orders</a></li>
 										</ul>
 									</li>
@@ -85,7 +86,7 @@
 							</li>
 
 							<li>
-								<a href="contact.html">Contact</a>
+								<a href="{{route("contact")}}">Contact</a>
 							</li>
 						</ul>
 					</div>	

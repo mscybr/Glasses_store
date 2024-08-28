@@ -53,6 +53,7 @@ Route::group(["middleware" => "is.logged"], function(){
 // admin
 Route::group(["middleware" => "is.admin"], function(){
 
+
     Route::get("orders", [CartController::class, "requests"])->name("orders");
     Route::post("orders/order/accept", [OrderController::class, "accept"])->name("accept_order");
     Route::post("orders/order/reject", [OrderController::class, "reject"])->name("reject_order");
@@ -83,8 +84,11 @@ Route::group(["middleware" => "is.admin"], function(){
     Route::post("subcategory/delete", [SubcategoryController::class, "destroy"])->name("delete_subcategory");
 
     Route::get("product/create", [ProductController::class, "create"])->name("product_form");
+    Route::get("product/inventory", [ProductController::class, "inventory"])->name("inventory");
     Route::post("product/create", [ProductController::class, "store"])->name("product_store");
+    Route::post("product/inventory/edit", [ProductController::class, "edit_inventory"])->name("edit_inventory");
     Route::post("product/delete", [ProductController::class, "destroy"])->name("delete_product");
+
 
     Route::get("site_config/create", [SiteConfigController::class, "create"])->name("site_config_form");
     Route::post("site_config/edit/shipping", [SiteConfigController::class, "edit_shipping"])->name("edit_shipping_cost");

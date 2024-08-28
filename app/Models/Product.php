@@ -28,6 +28,7 @@ class Product extends Model
     ];
 
     public function scopeFilter( $query, array $filters ){
+        if( ($filters["Stock"] ?? false) && $filters["Stock"] == "1" ) $query->where("stock", ">", 0 );
         if( $filters["Category"] ?? false) $query->where("category_id", "=", request("Category"));
         if( $filters["Subcategory"] ?? false) $query->Where("subcategory_id", "=", request("Subcategory"));
         if( $filters["Brand"] ?? false) $query->where(["brand_id" => request("Brand")]);

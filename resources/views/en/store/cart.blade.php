@@ -1,6 +1,28 @@
 @extends("en.store.layout")
 @section("content")
 
+	@php
+		$currencies = null;
+		if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
+			$currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
+			$currencies = json_decode($currencies);
+		}
+		$currency = Cookie::get('currency');
+		$selected_currency = [
+			"cost" => 1,
+			"currencySymbol" => "$"
+		];
+		// dd($currency);
+		if( $currency !== null && $currencies !== null ){
+			$selected_currency = (array)$currencies->{$currency};
+		}
+
+		function isRtl($value) {
+			$rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
+			return preg_match($rtlChar, $value) != 0;
+		}
+	@endphp
+
 	<!-- breadcrumb -->
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
@@ -55,7 +77,16 @@
 
 										</td>
                                         <td class="column-2">{{$item->product->name}}</td>
-                                        <td class="column-3">$ {{ $price }}</td>
+                                        {{-- <td class="column-3">$ {{ $price }}</td> --}}
+										@if (isRtl($selected_currency["currencySymbol"]))
+											<td class="column-3 text-left" dir="rtl">
+												{{  number_format(( $price / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+											</td>
+										@else
+											<td class="column-3">
+												{{ $selected_currency["currencySymbol"] . number_format(($price / $selected_currency["cost"]), 2, ".", "")}}
+											</td>
+										@endif
                                         <td class="column-4">
                                             {{ $item->amount }}
                                             {{-- <div class="wrap-num-product flex-w m-l-auto m-r-0">
@@ -70,7 +101,17 @@
                                                 </div>
                                             </div> --}}
                                         </td>
-                                        <td class="column-5">$ {{ $price * $item->amount }}</td>
+										
+										@if (isRtl($selected_currency["currencySymbol"]))
+											<td class="column-5" dir="rtl">
+												{{  number_format(( $price * $item->amount / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+											</td>
+										@else
+											<td class="column-5">
+												{{ $selected_currency["currencySymbol"] . number_format(($price * $item->amount / $selected_currency["cost"]), 2, ".", "")}}
+											</td>
+										@endif
+                                        {{-- <td class="column-5">$ {{ $price * $item->amount }}</td> --}}
                                     </tr>
                                 @endforeach
 
@@ -109,9 +150,15 @@
 							</div>
 
 							<div class="size-209">
-								<span class="mtext-110 cl2">
-									${{$total}}
-								</span>
+								@if (isRtl($selected_currency["currencySymbol"]))
+									<span class="mtext-110 cl2" dir="rtl">
+										{{  number_format(( $total / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+									</span>
+								@else
+									<span class="mtext-110 cl2">
+										{{ $selected_currency["currencySymbol"] . number_format(($total / $selected_currency["cost"]), 2, ".", "")}}
+									</span>
+								@endif
 							</div>
 						</div>
 
@@ -122,9 +169,15 @@
 								</span>
 							</div>
 							<div class="size-209">
-								<span class="mtext-110 cl2">
-									${{ $shipping_cost }}
-								</span>
+								@if (isRtl($selected_currency["currencySymbol"]))
+									<span class="mtext-110 cl2" dir="rtl">
+										{{  number_format((  $shipping_cost  / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+									</span>
+								@else
+									<span class="mtext-110 cl2">
+										{{ $selected_currency["currencySymbol"] . number_format(( $shipping_cost  / $selected_currency["cost"]), 2, ".", "")}}
+									</span>
+								@endif
 							</div>
 
 							{{-- <div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
@@ -173,7 +226,15 @@
 
 							<div class="size-209 p-t-1">
 								<span class="mtext-110 cl2">
-									${{ $total + $shipping_cost }}
+									@if (isRtl($selected_currency["currencySymbol"]))
+										<span class="mtext-110 cl2" dir="rtl">
+											{{  number_format((  ($total + $shipping_cost)  / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+										</span>
+									@else
+										<span class="mtext-110 cl2">
+											{{ $selected_currency["currencySymbol"] . number_format(( ($total + $shipping_cost)  / $selected_currency["cost"]), 2, ".", "")}}
+										</span>
+									@endif
 								</span>
 							</div>
 						</div>

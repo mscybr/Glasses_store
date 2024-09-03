@@ -1,5 +1,27 @@
 	@extends("en.store.layout")
 	@section("content")
+	@php
+	$currencies = null;
+		if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
+			$currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
+			$currencies = json_decode($currencies);
+		}
+		$currency = Cookie::get('currency');
+		$selected_currency = [
+			"cost" => 1,
+			"currencySymbol" => "$"
+		];
+		// dd($currency);
+		if( $currency !== null && $currencies !== null ){
+			$selected_currency = (array)$currencies->{$currency};
+		}
+
+		function isRtl($value) {
+			$rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
+			return preg_match($rtlChar, $value) != 0;
+		}
+		// ddd(1);
+	@endphp
 		<!-- Cart -->
 		<div class="wrap-header-cart js-panel-cart">
 			<div class="s-full js-hide-cart"></div>
@@ -589,10 +611,37 @@
 								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => null], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >All Items</a>
 							</li>
 						</ul>
+						<hr>
+						<h5 class="m-b-15">Price</h5>
+						<form action="{{ request()->route()->uri()}}" method="GET" class="row m">
+							@foreach (request()->all() as $key=> $item)
+								@if ( $key != "MaxPrice" && $key != "MinPrice" )
+									@if ( is_array($item) )
+										@foreach ($item as $query_param_key => $query_param)
+											<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+										@endforeach
+									@else
+										<input type="hidden" name="{{"$key"}}" value="{{$item}}">
+									@endif
+								@endif
+							@endforeach
+								<div class="mb-3 form-check col-xl-6">
+									<input type="number" class="form-control" id="exampleCheck1" name="MinPrice" value="{{ isset(request()->all()["MinPrice"]) && (is_array(request()->all()["MinPrice"])) ? request()->all()["MinPrice"] : '' }}" placeholder="Min Price">
+								</div>
+								<div class="mb-3 form-check col-xl-6">
+									<input type="number" class="form-control" id="exampleCheck1" name="MaxPrice" value="{{ isset(request()->all()["MaxPrice"]) && (is_array(request()->all()["MaxPrice"])) ? request()->all()["MaxPrice"] : '' }}" placeholder="Max Price">
+								</div>
+							<button type="submit"  class="ml-3 flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								Filter
+							</button>
+						</form>
 					</div>
 					<div class="col-sm-9 col-12">
 
 						<div class="row isotope-grid">
+							@php
+								$favs = (array)json_decode(Cookie::get('favs'));
+							@endphp
 							@foreach ($products as $product)
 								@php
 									$thumb = explode(",", $product->images)[0];
@@ -618,17 +667,24 @@
 												{{$product->name}}
 											</a>
 
-											<span class="stext-105 cl3">
-												${{$product->price - ( $product->sale * $product->price )}}
+										@if (isRtl($selected_currency["currencySymbol"]))
+											<span class="stext-105 cl3" dir="rtl">
+												{{  number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
 											</span>
+										@else
+											<span class="stext-105 cl3" >
+												{{ $selected_currency["currencySymbol"] . number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", "")}}
+											</span>
+										@endif
+
 										</div>
 
-										{{-- <div class="block2-txt-child2 flex-r p-t-3">
-											<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+										<div class="block2-txt-child2 flex-r p-t-3">
+											<a {{ isset($favs[$product->id]) ? "faved" : "" }} fav-url="{{route("fav", ["product"=> $product->id])}}" unfav-url="{{route("unfav", ["product"=> $product->id])}}" onclick="toggle_fav(this)" class="btn-addwish-b2 dis-block pos-relative">
+												<img class="icon-heart2 dis-block trans-04 ab-t-l" style="{{ isset($favs[$product->id]) ? "opacity: 1;" : "" }}" src="{{asset("assets/images/icons/icon-heart-02.png")}}" alt="ICON">
 												<img class="icon-heart1 dis-block trans-04" src="{{asset("assets/images/icons/icon-heart-01.png")}}" alt="ICON">
-												<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{asset("assets/images/icons/icon-heart-02.png")}}" alt="ICON">
 											</a>
-										</div> --}}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -647,5 +703,38 @@
 				</div>
 			</div>
 		</div>
+
+
+		<script>
+			
+			function toggle_fav(element){
+				if(element.getAttribute("faved") == null){
+					 fav(element);
+				}else{
+					un_fav(element);
+				}
+			}
+
+			function fav(element){
+				let fav_element_nav = document.querySelector("#nav-fav");
+				element.querySelector('.icon-heart2').style.opacity='1'
+				element.querySelector('.icon-heart1').style.opacity='0'
+				element.setAttribute('faved', "1");
+				// console.log(element)
+				fetch(element.getAttribute('fav-url'));
+				fav_element_nav.setAttribute("data-notify", Number(fav_element_nav.getAttribute("data-notify"))+ 1);
+			}
+			
+			function un_fav(element){
+				let fav_element_nav = document.querySelector("#nav-fav");
+				element.querySelector('.icon-heart2').style.opacity='0'
+				element.querySelector('.icon-heart1').style.opacity='1'
+				element.removeAttribute('faved');
+				fav_element_nav.setAttribute("data-notify", Number(fav_element_nav.getAttribute("data-notify")) - 1);
+				fetch(element.getAttribute('unfav-url'));
+
+			}
+
+		</script>
 
 	@endsection

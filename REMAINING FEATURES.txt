@@ -25,6 +25,10 @@ Sidebar:
 -Top Rated Products
 -Price
 
+add stock to product
+add sale to product
+add favs
+
 
 when an item is bought the stock of the product is decreased
 

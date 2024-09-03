@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Subcategory;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +30,18 @@ class Product extends Model
     ];
 
     public function scopeFilter( $query, array $filters ){
+        $currency = Cookie::get('currency');
+        $currencies = null;
+        if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
+            $currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
+            $currencies = json_decode($currencies);
+        }
+		$selected_currency = [
+			"cost" => 1
+		];
+		if( $currency !== null && $currencies !== null ){
+			$selected_currency = (array)$currencies->{$currency};
+		}
         if( ($filters["Stock"] ?? false) && $filters["Stock"] == "1" ) $query->where("stock", ">", 0 );
         if( $filters["Category"] ?? false) $query->where("category_id", "=", request("Category"));
         if( $filters["Subcategory"] ?? false) $query->Where("subcategory_id", "=", request("Subcategory"));
@@ -83,8 +97,8 @@ class Product extends Model
                 }
             });
         }
-        if( $filters["MinPrice"] ?? false) $query->where("price", ">=", request("MinPrice"));
-        if( $filters["MaxPrice"] ?? false) $query->where("price", "<=", request("MaxPrice"));
+        if( $filters["MinPrice"] ?? false) $query->whereRaw("price - ( price * sale)"." >= ".( floatval(request("MinPrice")) / $selected_currency["cost"]) );
+        if( $filters["MaxPrice"] ?? false) $query->whereRaw("price  - ( price * sale)"."<=".( floatval(request("MaxPrice")) / $selected_currency["cost"]));
         if( $filters["Search"] ?? false) {
             $query->where("name", "LIKE", "%". request("Search") . "%")
                 ->orWhere("description", "LIKE", "%". request("Search") ."&");

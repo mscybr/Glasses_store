@@ -5,7 +5,26 @@
 @php
     $images = explode(",", $product->images);
     $image_id = 0;
-@endphp
+
+	$currencies = null;
+	if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
+		$currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
+		$currencies = json_decode($currencies);
+	}
+	$currency = Cookie::get('currency');
+	$selected_currency = [
+		"cost" => 1,
+		"currencySymbol" => "$"
+	];
+	if( $currency !== null && $currencies !== null ){
+		$selected_currency = (array)$currencies->{$currency};
+	}
+
+		function isRtl($value) {
+			$rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
+			return preg_match($rtlChar, $value) != 0;
+		}
+	@endphp
 
 	<!-- breadcrumb -->
 	<div class="container">
@@ -76,10 +95,17 @@
 							{{ $product->name }}
 						</h4>
 
-						<span class="mtext-106 cl2">
-							${{$product->price - ( $product->price * $product->sale )}}
+						@if (isRtl($selected_currency["currencySymbol"]))
+							<span class="mtext-106 cl2" dir="rtl">
+								{{  number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+							</span>
+						@else
+						<span class="mtext-106 cl2" >
+							{{ $selected_currency["currencySymbol"] . number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", "")}}
 						</span>
+						@endif	
 
+					
 						<p class="stext-102 cl3 p-t-23">
 							{{ $product->description }}
 						</p>
@@ -417,9 +443,15 @@
 											{{$product->name}}
 										</a>
 
-										<span class="stext-105 cl3">
-											${{$product->price - ( $product->price * $product->sale )}}
+										@if (isRtl($selected_currency["currencySymbol"]))
+											<span class="stext-105 cl3" dir="rtl">
+												{{  number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+											</span>
+										@else
+										<span class="stext-105 cl3" >
+											{{ $selected_currency["currencySymbol"] . number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", "")}}
 										</span>
+										@endif	
 									</div>
 
 									<div class="block2-txt-child2 flex-r p-t-3">

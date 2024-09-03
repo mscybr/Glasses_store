@@ -33,9 +33,14 @@ Route::post('/authenticate', [UserController::class, "authenticate"])->name("aut
 Route::post('/register', [UserController::class, "store"])->name("register");
 
 Route::get("shop", [ProductController::class, "index"])->name("shop");
+Route::get("fav", [ProductController::class, "add_to_fav"])->name("fav");
+Route::get("unfav", [ProductController::class, "remove_fav"])->name("unfav");
+Route::get("favs", [ProductController::class, "favs"])->name("favs");
 Route::get("about", function(){ return view("en.store.about"); })->name("about");
 Route::get("contact", function(){ return view("en.store.contact"); })->name("contact");
 Route::get("shop/product/{product_id}", [ProductController::class,  "show"] )->name("product");
+Route::get("site_config/toggle_currency", [SiteConfigController::class, "toggle_currency"])->name("toggle_currency");
+
 
 
 // logged in
@@ -92,4 +97,6 @@ Route::group(["middleware" => "is.admin"], function(){
 
     Route::get("site_config/create", [SiteConfigController::class, "create"])->name("site_config_form");
     Route::post("site_config/edit/shipping", [SiteConfigController::class, "edit_shipping"])->name("edit_shipping_cost");
+    Route::post("site_config/add_currency", [SiteConfigController::class, "add_currency"])->name("add_currency");
+    Route::post("site_config/delete_currency", [SiteConfigController::class, "delete_currency"])->name("delete_currency");
 });

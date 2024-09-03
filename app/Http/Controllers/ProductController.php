@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -28,6 +29,7 @@ class ProductController extends Controller
         if( $validation == false ) return redirect()->route("shop");
 
         $product = Product::find($product_id);
+        // $product = Product::where("id", $product_id);
         $related_query = Product::latest();
         $related_prods = $related_query->where("category_id", "=", $product->category_id )->Where("id", "!=", $product_id)->get();
         // dd();
@@ -147,7 +149,7 @@ class ProductController extends Controller
             "stock" => "required"
         ]);
         foreach( $request->stock as $key => $amount ){
-            $product = Product::find($key);
+            $product = Product::find( $key);
             // dd($product);
             $product->update(["stock"=>$amount]);
         }
@@ -193,6 +195,45 @@ class ProductController extends Controller
     public function update(Request $request, product $product)
     {
         //
+    }
+
+    public function remove_fav( Request $request )
+    {
+        $validation = $request->validate([
+            "product" => "exists:products,id"
+        ]);
+        $favs = (array)json_decode($request->cookie('favs'));
+        unset($favs[$validation["product"]]);
+
+        $response = new Response('Success');
+        $response->withCookie(cookie('favs', json_encode($favs)));
+        return $response;
+    }
+
+    public function add_to_fav( Request $request )
+    {
+        $validation = $request->validate([
+            "product" => "exists:products,id"
+        ]);
+        $favs = (array)json_decode($request->cookie('favs'));
+        $favs[$validation["product"]] = 1;
+
+        $response = new Response('Success');
+        $response->withCookie(cookie('favs', json_encode($favs)));
+        return $response;
+    }
+
+    public function favs(Request $request)
+    {
+        $products = [];
+        if($request->cookie('favs') !== null){
+
+            foreach ( json_decode($request->cookie('favs')) as $product_id => $value) {
+                $products[] = Product::where("id", $product_id)->get()[0];
+            }
+        }
+        // dd($products);
+        return view("en.store.favs", ["products" => $products]);
     }
 
     /**

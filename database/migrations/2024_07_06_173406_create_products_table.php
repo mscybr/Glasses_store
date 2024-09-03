@@ -27,7 +27,7 @@ return new class extends Migration
             $table->text("images");
             $table->float("avg_rate")->default(0);
             $table->float("sale")->default(0);
-            $table->boolean("stock")->default(false);
+            $table->integer("stock")->default(0);
             $table->timestamps();
 
             // $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

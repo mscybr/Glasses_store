@@ -26,10 +26,20 @@
 						<a href="#" class="flex-c-m trans-04 p-lr-25">
 							EN
 						</a>
+					
 
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							USD
+				
+						@php
+							$currencies = [];
+							$_currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"');
+							if(count( $_currencies ) > 0 ) $currencies = json_decode($_currencies[0]->value);
+						@endphp
+
+					@foreach ( $currencies as $currency => $currencyData)
+						<a href="{{route("toggle_currency", ["currency" => $currency])}}" class="flex-c-m p-lr-10 trans-04">
+							{{ $currency }}
 						</a>
+					@endforeach
 					</div>
 				</div>
 			</div>
@@ -105,10 +115,10 @@
 								<i class="zmdi zmdi-shopping-cart"></i>
 							</a>
 						@endauth
-{{-- 
-						<a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+					
+						<a href="{{route("favs")}}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" id="nav-fav" data-notify="{{ Cookie::get('favs') ? count( (array)json_decode( Cookie::get('favs')) ) : 0 }}">
 							<i class="zmdi zmdi-favorite-outline"></i>
-						</a> --}}
+						</a>
 					</div>
 				</nav>
 			</div>	
@@ -176,9 +186,17 @@
 							EN
 						</a>
 
+						@php
+							$currencies = [];
+							$_currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"');
+							if(count( $_currencies ) > 0 ) $currencies = json_decode($_currencies[0]->value);
+						@endphp
+
+						@foreach ( $currencies as $currency => $currencyData)
 						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							USD
+							{{ $currency }}
 						</a>
+						@endforeach
 					</div>
 				</li>
 			</ul>

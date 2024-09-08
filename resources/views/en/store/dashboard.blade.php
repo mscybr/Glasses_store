@@ -1,125 +1,129 @@
 @extends("en.store.layout")
 @section("content")
+@php
+    $currencies = null;
+    if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
+        $currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
+        $currencies = json_decode($currencies);
+    }
+    $currency = Cookie::get('currency');
+    $selected_currency = [
+        "cost" => 1,
+        "currencySymbol" => "$"
+    ];
+    // dd($currency);
+    if( $currency !== null && $currencies !== null ){
+        $selected_currency = (array)$currencies->{$currency};
+    }
+
+    function isRtl($value) {
+        $rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
+        return preg_match($rtlChar, $value) != 0;
+    }
+    // ddd(1);
+@endphp
 
 
-	<!-- Shoping Cart -->
-	<form class="bg0 p-t-75 p-b-85" method="POST" action="{{ route("store_billing_address") }}">
-		@csrf
-		<div class="container">
-			<div class="row mt-5">
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="heading text-center">Addresses</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        
+        <!-- page-cart -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <ul class="my-account-nav">
+                            {{-- <li><a href="my-account.html" class="my-account-nav-item ">Dashboard</a></li> --}}
+                            <li><a href="my-account-orders.html" class="my-account-nav-item">Orders</a></li>
+                            <li><span class="my-account-nav-item active">Addresses</span></li>
+                            {{-- <li><a href="my-account-edit.html" class="my-account-nav-item">Account Details</a></li> --}}
+                            {{-- <li><a href="my-account-wishlist.html" class="my-account-nav-item">Wishlist</a></li> --}}
+                            <li><a href="{{route("logout")}}" class="my-account-nav-item">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="my-account-content account-edit">
+                            <div class="">
+                                @if($errors->any())
+                                    @foreach ($errors->all(':message') as $message)
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"> {{ $message }}</div>
+                                    @endforeach
+                                @endif
+                                <form class="" id="form-password-change"  method="POST" action="{{ route("store_billing_address") }}">
+                                    @csrf
+                                    <h6 class="mb_20">Add new address</h6>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="first_name" value="{{old("first_name")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">First name</label>
+                                    </div>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="last_name" value="{{old("last_name")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">Last name</label>
+                                    </div>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="country" value="{{old("country")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">Country</label>
+                                    </div>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="city" value="{{old("city")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">City</label>
+                                    </div>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="street" value="{{old("street")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">Street</label>
+                                    </div>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="address" value="{{old("address")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">Address</label>
+                                    </div>
+                                    <div class="tf-field style-1 mb_15">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="text" id="property1" name="phone" value="{{old("phone")}}">
+                                        <label class="tf-field-label fw-4 text_black-2" for="property1">Phone</label>
+                                    </div>
+                                    <div class="mb_20">
+                                        <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <hr>
+                        <table class="tf-table-page-cart">
+                            <thead>
+                                <tr>
+                                    <th  style="text-align: left">Name</th>
+                                    <th  style="text-align: left">Country</th>
+                                    <th  style="text-align: left">City</th>
+                                    <th  style="text-align: left">Street</th>
+                                    <th  style="text-align: left">Address</th>
+                                    <th  style="text-align: left">Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($addresses as $item)
+                                    <tr class="tf-cart-item file-delete">
+                                        <td style="text-align: left">{{ $item->first_name.$item->last_name }}</td>
+                                        <td style="text-align: left">{{ $item->country }}</td>
+                                        <td style="text-align: left">{{ $item->city }}</td>
+                                        <td style="text-align: left">{{ $item->street }}</td>
+                                        <td style="text-align: left">{{ $item->address }}</td>
+                                        <td style="text-align: left">{{ $item->phone }}</td>
+                                        
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                  
+                </div>
+            </div>
+        </section>
+        <!-- page-cart -->
 
-				<div class="col-12">
-					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-
-                        @if($errors->any())
-							@foreach ($errors->all(':message') as $message)
-								<div class="alert alert-danger alert-dismissible fade show" role="alert"> {{ $message }}</div>
-							@endforeach
-                        @endif
-						<h1 class="mtext-109 cl2  p-b-30 text-center">
-							Add a billing address
-						</h1>
-
-						<div class="p-5" >
 
 
-							<div class="col-9 m-auto">
-
-								<div class="p-t-15">
-									<span class="stext-112 cl8">
-										First Name
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("first_name")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="first_name" placeholder="First Name" required>
-									</div>
-									<span class="stext-112 cl8">
-										Last Name
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("last_name")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="last_name" placeholder="Last Name" required>
-									</div>
-									<span class="stext-112 cl8">
-                                        Country
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("country")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="country" placeholder="Country" required>
-									</div>
-									<span class="stext-112 cl8">
-										City
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("city")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="city" placeholder="City" required>
-									</div>
-									<span class="stext-112 cl8">
-										Street
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("street")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="street" placeholder="Street" required>
-									</div>
-									<span class="stext-112 cl8">
-										Address
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("address")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="address" placeholder="Address" required>
-									</div>
-									<span class="stext-112 cl8">
-										Phone
-									</span>
-									<div class="bor8 bg0 m-b-12">
-										<input value="{{old("phone")}}" class="stext-111 cl8 plh3 size-111 p-lr-15" type="number" name="phone" placeholder="Phone" required>
-									</div>
-								</div>
-								<button class="btn btn-success">
-									Add Billing Address
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	</form>
-
-		
-<div class="bg0 p-t-75 p-b-85">
-	<div class="col-9 mx-auto">
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th >Name</th>
-					<th >Country</th>
-					<th >City</th>
-					<th >Street</th>
-					<th >Address</th>
-					<th >Phone</th>
-					{{-- <th >Delete</th> --}}
-				</tr>
-			</thead>
-			<tbody>
-
-				@foreach ($addresses as $item)
-					<tr>
-						<td >{{ $item->first_name.$item->last_name }}</td>
-						<td >{{ $item->country }}</td>
-						<td >{{ $item->city }}</td>
-						<td >{{ $item->street }}</td>
-						<td >{{ $item->address }}</td>
-						<td >{{ $item->phone }}</td>
-						
-						{{-- <td>
-							<form action="{{route("delete_billing_address")}}" method="post">
-								@csrf
-								<input type="hidden" name="item_id" value="{{$item->id}}"> 
-								<input type="submit" value="delete" class="btn btn-danger">
-							</form>
-						</td> --}}
-					</tr>
-				@endforeach
-			</tbody>
-
-		</table>
-	</div>
-</div>
-		
 @endsection

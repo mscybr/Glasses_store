@@ -1,35 +1,18 @@
+<meta charset="utf-8">
+<title>Ecomus - Ultimate HTML</title>
 
-<title>Register</title>
+<meta name="author" content="themesflat.com">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-<link rel="icon" type="image/png" href={{asset("assets/images/icons/favicon.png")}}/>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/bootstrap/css/bootstrap.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/fonts/iconic/css/material-design-iconic-font.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/fonts/linearicons-v1.0.0/icon-font.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/animate/animate.css")}}>
-<!--===============================================================================================-->	
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/css-hamburgers/hamburgers.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/animsition/css/animsition.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/select2/select2.min.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/perfect-scrollbar/perfect-scrollbar.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/MagnificPopup/magnific-popup.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/slick/slick.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/vendor/daterangepicker/daterangepicker.css")}}>
-<!--===============================================================================================-->
-<link rel="stylesheet" type="text/css" href={{asset("assets/css/util.css")}}>
-<link rel="stylesheet" type="text/css" href={{asset("assets/css/main.css")}}>
-<!--===============================================================================================-->
+<!-- font -->
+<link rel="stylesheet" href={{asset("assets3/fonts/fonts.css")}}>
+<!-- Icons -->
+<link rel="stylesheet" href={{asset("assets3/fonts/font-icons.css")}}>
+<link rel="stylesheet" href={{asset("assets3/css/bootstrap.min.css")}}>
+<link rel="stylesheet" href={{asset("assets3/css/swiper-bundle.min.css")}}>
+<link rel="stylesheet" href={{asset("assets3/css/animate.css")}}>
+<link rel="stylesheet"type="text/css" href={{asset("assets3/css/styles.css")}}>
+
+<!-- Favicon and Touch Icons  -->
+<link rel="shortcut icon" href={{asset("assets3/images/logo/favicon.png")}}>
+<link rel="apple-touch-icon-precomposed" href={{asset("assets3/images/logo/favicon.png")}}>

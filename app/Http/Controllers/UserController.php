@@ -115,6 +115,8 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $th) {
             if( $this->is_api($request) ){
                 return response()->json(['error' => 'Bad Request', "error_fields" => $th->validator->errors()], 400);
+            }else{
+                return redirect()->back()->withErrors( $th->validator->errors())->withInput();
             }
         }
         $fields["number"] = $fields["countryCode"].$fields["number"];

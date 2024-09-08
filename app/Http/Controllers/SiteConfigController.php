@@ -47,7 +47,7 @@ class SiteConfigController extends Controller
         unset($currencies[$request->item_id]);
 
         SiteConfig::where("key", "currencies")->update(["value" => json_encode($currencies)]);
-        return redirect()->back();
+        return redirect()->route("site_config_form");
     }
 
     public function add_currency( Request $request ){
@@ -81,7 +81,7 @@ class SiteConfigController extends Controller
             "cost" => "required|numeric"
         ]);
         SiteConfig::where("key", "shipping_cost")->update(["value" => $validation["cost"]]);
-        return $this->create();
+        return redirect()->back();
     }
 
     public function create(){

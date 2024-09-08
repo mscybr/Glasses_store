@@ -1,411 +1,186 @@
-	@extends("en.store.layout")
-	@section("content")
-	@php
-	$currencies = null;
-		if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
-			$currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
-			$currencies = json_decode($currencies);
-		}
-		$currency = Cookie::get('currency');
-		$selected_currency = [
-			"cost" => 1,
-			"currencySymbol" => "$"
-		];
-		// dd($currency);
-		if( $currency !== null && $currencies !== null ){
-			$selected_currency = (array)$currencies->{$currency};
-		}
+@extends("en.store.layout")
+@section("content")
+@php
+    $currencies = null;
+    if( count(DB::select('SELECT value FROM site_configs WHERE key = "currencies"')) > 0 ){
+        $currencies = DB::select('SELECT value FROM site_configs WHERE key = "currencies"')[0]->value;
+        $currencies = json_decode($currencies);
+    }
+    $currency = Cookie::get('currency');
+    $selected_currency = [
+        "cost" => 1,
+        "currencySymbol" => "$"
+    ];
+    // dd($currency);
+    if( $currency !== null && $currencies !== null ){
+        $selected_currency = (array)$currencies->{$currency};
+    }
 
-		function isRtl($value) {
-			$rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
-			return preg_match($rtlChar, $value) != 0;
-		}
-		// ddd(1);
-	@endphp
-		<!-- Cart -->
-		<div class="wrap-header-cart js-panel-cart">
-			<div class="s-full js-hide-cart"></div>
+    function isRtl($value) {
+        $rtlChar = '/[\x{0590}-\x{083F}]|[\x{08A0}-\x{08FF}]|[\x{FB1D}-\x{FDFF}]|[\x{FE70}-\x{FEFF}]/u';
+        return preg_match($rtlChar, $value) != 0;
+    }
+    // ddd(1);
+@endphp
 
-			<div class="header-cart flex-col-l p-l-65 p-r-25">
-				<div class="header-cart-title flex-w flex-sb-m p-b-8">
-					<span class="mtext-103 cl2">
-						Your Cart
-					</span>
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="heading text-center">New Arrival</div>
+                        <p class="text-center text-2 text_black-2 mt_5">Shop through our latest selection of Fashion</p> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /page-title -->
 
-					<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
-						<i class="zmdi zmdi-close"></i>
-					</div>
-				</div>
-				<div class="header-cart-content flex-w js-pscroll">
-					<ul class="header-cart-wrapitem w-full">
-						<li class="header-cart-item flex-w flex-t m-b-12">
-							<div class="header-cart-item-img">
-								<img src="images/item-cart-01.jpg" alt="IMG">
-							</div>
-
-							<div class="header-cart-item-txt p-t-8">
-								<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-									White Shirt Pleat
-								</a>
-
-								<span class="header-cart-item-info">
-									1 x $19.00
-								</span>
-							</div>
-						</li>
-
-						<li class="header-cart-item flex-w flex-t m-b-12">
-							<div class="header-cart-item-img">
-								<img src="images/item-cart-02.jpg" alt="IMG">
-							</div>
-
-							<div class="header-cart-item-txt p-t-8">
-								<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-									Converse All Star
-								</a>
-
-								<span class="header-cart-item-info">
-									1 x $39.00
-								</span>
-							</div>
-						</li>
-
-						<li class="header-cart-item flex-w flex-t m-b-12">
-							<div class="header-cart-item-img">
-								<img src="images/item-cart-03.jpg" alt="IMG">
-							</div>
-
-							<div class="header-cart-item-txt p-t-8">
-								<a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-									Nixon Porter Leather
-								</a>
-
-								<span class="header-cart-item-info">
-									1 x $17.00
-								</span>
-							</div>
-						</li>
-					</ul>
-					
-					<div class="w-full">
-						<div class="header-cart-total w-full p-tb-40">
-							Total: $75.00
-						</div>
-
-						<div class="header-cart-buttons flex-w w-full">
-							<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-								View Cart
-							</a>
-
-							<a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
-								Check Out
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		
-		<!-- Product -->
-		<section class="section-slide">
-							<div class="wrap-slick1 rs1-slick1">
-								<div class="slick1">
-									<div class="item-slick1" style="background-position-y: 2px;background-image: url({{asset("assets/images/slide-02.jpg")}});">
-										<div class="container h-full">
-											<div class="flex-col-l-m h-full p-t-100 p-b-30">
-												<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-													<span class="ltext-202 cl2 respon2">
-														{{-- See the difference. --}}
-													</span>
-												</div>
-													
-												<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-													<h2 class="ltext-102 cl2 p-t-19 p-b-43 respon1">
-														Better Vision For a Great Life
-													</h2>
-												</div>
-													
-												<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-													<a href="" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-														Shop Now
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
-					
-									<div class="item-slick1" style="background-position-y: 2px;background-image: url({{asset("assets/images/slide-03.jpg")}});">
-										<div class="container h-full">
-											<div class="flex-col-l-m h-full p-t-100 p-b-30">
-												<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-													<span class="ltext-202 cl2 respon2">
-														See the difference.
-													</span>
-												</div>
-													
-												<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-													<h2 class="ltext-102 cl2 p-t-19 p-b-43 respon1">
-														Sunglass With a Modern Twist
-													</h2>
-												</div>
-													
-												<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-													<a href="" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-														Shop Now
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
-					
-									<div class="item-slick1" style="background-position-y: 2px;background-image: url({{asset("assets/images/slide-04.jpg")}});">
-										<div class="container h-full">
-											<div class="flex-col-l-m h-full p-t-100 p-b-30">
-												<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-													<span class="ltext-202 cl2 respon2">
-														See the difference.
-													</span>
-												</div>
-													
-												<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-													<h2 class="ltext-102 cl2 p-t-19 p-b-43 respon1">
-														Kids Glasess With a Modern Twist
-													</h2>
-												</div>
-													
-												<div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-													<a href="" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-														Shop Now
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
-					
-								</div>
-							</div>
-						</section>
-
-		<div class="bg0 m-t-23 p-b-140">
-			<div class="container">
-				
-				<div class="flex-w flex-sb-m p-b-52">
-					{{-- <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-							All Products
-						</button>
-
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-							Women
-						</button>
-
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-							Men
-						</button>
-
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-							Bag
-						</button>
-
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-							Shoes
-						</button>
-
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-							Watches
-						</button>
-					</div> --}}
-
-
-					<div class="flex-w flex-c-m m-tb-10">
-						<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter d-sm-none">
-							<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-							<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-							Filter
-						</div>
-
-						<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
-							<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-							<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-							Search
-						</div>
-					</div>
-					
-					<!-- Search product -->
-					<div class="dis-none panel-search w-full p-t-10 p-b-15">
-						<form  method="get">
-						<div class="bor8 dis-flex p-l-15">
-
-								<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-									<i class="zmdi zmdi-search"></i>
-								</button>
-								
-								<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="Search" placeholder="Search">
-							</div>	
-						</form>
-						</div>
-
-					<!-- Filter -->
-					<div class="dis-none panel-filter w-full p-t-10">
-						<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-						
-							<div class="filter-col1 p-r-15 p-b-27">
-								<div class="mtext-102 cl2 p-b-15">
-									Brand
-								</div>
-
-								<ul>
-									@foreach ($brands as $brand)
-										<li class="p-b-6">
-											<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Brand' => $brand->id]) }}" class="filter-link stext-106 trans-04">
-												{{ $brand->brandName }}
-											</a>
-										</li>
-									@endforeach
-								</ul>
-							</div>
-							@php
+        <section class="flat-spacing-1">
+            <div class="container">
+                <div class="tf-shop-control grid-3 align-items-center">
+                    <div></div>
+                    <!-- <div class="tf-control-filter">
+                        <a href="#filterShop" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="tf-btn-filter"><span class="icon icon-filter"></span><span class="text">Filter</span></a>
+                    </div> -->
+                    <ul class="tf-control-layout d-flex justify-content-center">
+                        <li class="tf-view-layout-switch sw-layout-2" data-value-grid="grid-2">
+                            <div class="item"><span class="icon icon-grid-2"></span></div>
+                        </li>
+                        <li class="tf-view-layout-switch sw-layout-3" data-value-grid="grid-3">
+                            <div class="item"><span class="icon icon-grid-3"></span></div>
+                        </li>
+                        <li class="tf-view-layout-switch sw-layout-4 active" data-value-grid="grid-4">
+                            <div class="item"><span class="icon icon-grid-4"></span></div>
+                        </li>
+                        <li class="tf-view-layout-switch sw-layout-5" data-value-grid="grid-5">
+                            <div class="item"><span class="icon icon-grid-5"></span></div>
+                        </li>
+                        <li class="tf-view-layout-switch sw-layout-6" data-value-grid="grid-6">
+                            <div class="item"><span class="icon icon-grid-6"></span></div>
+                        </li>
+                    </ul>
+                    <div class="tf-control-sorting d-flex justify-content-end">
+                        <div class="tf-dropdown-sort" data-bs-toggle="dropdown">
+                            <div class="btn-select">
+                                <span class="text-sort-value">Featured</span>
+                                <span class="icon icon-arrow-down"></span>
+                            </div>
+                            <div class="dropdown-menu">
+                                <div class="select-item active">
+                                    <span class="text-value-item">Featured</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Best selling</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Alphabetically, A-Z</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Alphabetically, Z-A</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Price, low to high</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Price, high to low</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Date, old to new</span>
+                                </div>
+                                <div class="select-item">
+                                    <span class="text-value-item">Date, new to old</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="blog-sidebar-main p-0">
+                    <div class="tf-section-sidebar wrap-sidebar-mobile flex-shrink-0">
+                        <div class="widget-facet wd-categories">
+                            <div class="facet-title" data-bs-target="#categories" data-bs-toggle="collapse" aria-expanded="true" aria-controls="categories">
+                                <span>Categories</span>
+                                <span class="icon icon-arrow-up"></span>
+                            </div>
+                            @php
 							$request_array = request()->all();
 							if( isset( $request_array["Subcategory"] ) ) unset($request_array["Subcategory"]);
 							if( isset( $request_array["Category"] ) ) unset($request_array["Category"]);
 							@endphp
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Categories
-							</div>
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									All
-								</a>
-								@foreach ($categories as $category)
-									<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => $category->id], $request_array) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-										{{ $category->categoryName }}
-									</a>
-								@endforeach
-							</div>
-						</div>
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Stock
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => 1], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									In-Stock
-								</a>
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => null], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									All Items
-								</a>
-							</div>
-						</div>
-
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Subcategories
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategory' => null], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									All
-								</a>
-								@foreach ($categories as $category)
-									@if (isset($category->subcategory))
-										@foreach ($category->subcategory as $subcategory)
-																
-											<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategory' => $subcategory->id], $request_array) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-												{{$subcategory->subcategoryName}}
-											</a>
-										@endforeach
-									@endif
-								@endforeach
-							</div>
-						</div>
-						{{-- 
-							<div class="filter-col2 p-r-15 p-b-27">
-								<div class="mtext-102 cl2 p-b-15">
-									Price
-								</div>
-
-								<ul>
-									<li class="p-b-6">
-										<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-											All
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<a href="#" class="filter-link stext-106 trans-04">
-											$0.00 - $50.00
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<a href="#" class="filter-link stext-106 trans-04">
-											$50.00 - $100.00
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<a href="#" class="filter-link stext-106 trans-04">
-											$100.00 - $150.00
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<a href="#" class="filter-link stext-106 trans-04">
-											$150.00 - $200.00
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<a href="#" class="filter-link stext-106 trans-04">
-											$200.00+
-										</a>
-									</li>
-								</ul>
-							</div> --}}
-
-							<div class="filter-col1 p-r-15 p-b-27">
-								<div class="mtext-102 cl2 p-b-15">
-									Sizes
-								</div>
-								<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
-									@foreach (request()->all() as $key=> $item)
-											@if ( $key != "Size" )
-												@if ( is_array($item) )
-													@foreach ($item as $query_param_key => $query_param)
-														<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
-													@endforeach
-												@else
-													<input type="hidden" name="{{"$key"}}" value="{{$item}}">
-												@endif
-											@endif
-										@endforeach
-									{{-- <ul> --}}
-										@foreach ($sizes as $size)
-											{{-- <li class="p-b-6"> --}}
-												<div class="mb-3 form-check col-12">
-													<input type="checkbox" class="form-check-input" id="exampleCheck1" name="Size[{{$size->id}}]" value="{{$size->sizeName}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->sizeName, request()->all()["Size"])) ? ' checked' : '' }}>
-													<label class="form-check-label" for="exampleCheck1">{{$size->sizeName}}</label>
-												</div>
-											{{-- </li> --}}
-										@endforeach
-									{{-- </ul> --}}
-									<button type="submit"  class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-										Filter
-									</button>
-									{{-- <a onclick="this.parentElement.parentElement.submit()">Filter</a> --}}
-								</form>
-							</div>
-
-							<div class="filter-col1 p-r-15 p-b-27">
-								<div class="mtext-102 cl2 p-b-15">
-									Colors
-								</div>
-								<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
-									{{-- <ul> --}}
-										@foreach (request()->all() as $key=> $item)
+                            <div id="categories" class="collapse show">
+                                <ul class="list-categoris current-scrollbar mb_36">
+                                    {{-- <li class="cate-item current"><a href="#"><span>Fashion</span></a></li> --}}
+                                    <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}"><span>All</span></a></li>
+                                    @foreach ($categories as $category)
+                                        <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => $category->id], $request_array) }}"><span>{{ $category->categoryName }}</span></a></li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="widget-facet wd-categories">
+                            <div class="facet-title" data-bs-target="#subcategories" data-bs-toggle="collapse" aria-expanded="true" aria-controls="subcategories">
+                                <span>Subcategories</span>
+                                <span class="icon icon-arrow-up"></span>
+                            </div>
+                            @php
+							$request_array = request()->all();
+							if( isset( $request_array["Subcategory"] ) ) unset($request_array["Subcategory"]);
+							if( isset( $request_array["Category"] ) ) unset($request_array["Category"]);
+							@endphp
+                            <div id="subcategories" class="collapse show">
+                                <ul class="list-categoris current-scrollbar mb_36">
+                                    {{-- <li class="cate-item current"><a href="#"><span>Fashion</span></a></li> --}}
+                                    <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategory' => null], request()->all()) }}"><span>All</span></a></li>
+                                    @foreach ($categories as $category)
+                                        @if (isset($category->subcategory))
+                                            @foreach ($category->subcategory as $subcategory)
+                                                <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategory' => $subcategory->id], $request_array) }}"><span>{{$subcategory->subcategoryName}}</span></a></li>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div action="#" id="facet-filter-form" class="facet-filter-form">
+                            {{-- <div class="widget-facet">
+                                <div class="facet-title" data-bs-target="#availability" data-bs-toggle="collapse" aria-expanded="true" aria-controls="availability">
+                                    <span>Availability</span>
+                                    <span class="icon icon-arrow-up"></span>
+                                </div>
+                                <div id="availability" class="collapse show">
+                                    <ul class="tf-filter-group current-scrollbar mb_36">
+                                        <li class="list-item d-flex gap-12 align-items-center">
+                                            <input type="checkbox" name="availability" class="tf-check" id="availability-1">
+                                            <label for="availability-1" class="label"><span>In stock</span>&nbsp;<span>(14)</span></label>
+                                        </li>
+                                        <li class="list-item d-flex gap-12 align-items-center">
+                                            <input type="checkbox" name="availability" class="tf-check" id="availability-2">
+                                            <label for="availability-2" class="label"><span>Out of stock</span>&nbsp;<span>(2)</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div> --}}
+                            <div class="widget-facet">
+                                <div class="facet-title" data-bs-target="#brand" data-bs-toggle="collapse" aria-expanded="true" aria-controls="brand">
+                                    <span>Brand</span>
+                                    <span class="icon icon-arrow-up"></span>
+                                </div>
+                                <div id="brand" class="collapse show">
+                                    <ul class="tf-filter-group current-scrollbar mb_36">
+                                        @foreach ($brands as $brand)
+                                            <li class="list-item d-flex gap-12 align-items-center">
+                                                <input onchange="location.href=this.getAttribute('href')" href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Brand' => $brand->id]) }}" type="checkbox" {{ isset(request()->all()["Brand"]) && request()->all()["Brand"] == $brand->id ? ' checked' : '' }} name="brand" class="tf-check" id="brand-1">
+                                                {{-- <label for="brand-1" class="label"><span>{{ $brand->brandName }}</span>&nbsp;<span>(8)</span></label> --}}
+                                                <label for="brand-1" class="label"><span>{{ $brand->brandName }}</label>
+                                            </li>
+                                        @endforeach
+                                       
+                                    </ul>
+                                </div>
+                            </div>
+                           
+                            <form class="widget-facet mb-2" action="{{ request()->route()->uri()}}">
+                            	@foreach (request()->all() as $key=> $item)
 											@if ( $key != "Color" )
 												@if ( is_array($item) )
 													@foreach ($item as $query_param_key => $query_param)
@@ -416,325 +191,444 @@
 												@endif
 											@endif
 										@endforeach
-										@foreach ($colors as $color)
-											{{-- <li class="p-b-6"> --}}
-												<div class="mb-3 form-check col-12">
-													<input {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->colorName, request()->all()["Color"])) ? ' checked' : '' }} type="checkbox" class="form-check-input" id="exampleCheck1" name="Color[{{$color->id}}]" value="{{$color->colorName}}" {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->id, request()->all()["Color"])) ? ' checked' : '' }}>
-													<label class="form-check-label" for="exampleCheck1"> {{$color->colorName}}</label>
-												</div>
-											{{-- </li> --}}
+                                <div class="widget-facet mb-2" >
+                                    <div class="facet-title" data-bs-target="#color" data-bs-toggle="collapse" aria-expanded="true" aria-controls="color">
+                                        <span>Color</span>
+                                        <span class="icon icon-arrow-up"></span>
+                                    </div>
+                                    <div id="color" class="collapse show">
+                                        <ul class="tf-filter-group filter-color current-scrollbar mb_36">
+                                            @foreach ($colors as $color)
+											<li class="list-item d-flex gap-12 align-items-center">
+                                                <input {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->colorName, request()->all()["Color"])) ? ' checked' : '' }} type="checkbox" name="Color[{{$color->id}}]" value="{{$color->colorName}}" class="tf-check-color" style="background: {{$color->colorName}}">
+                                                <label for="beige" class="label"><span>{{$color->colorName}}</span></label>
+                                            </li>
 										@endforeach
-									{{-- </ul> --}}
-									<button type="submit"  class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-										Filter
-									</button>
-									{{-- <a onclick="this.parentElement.parentElement.submit()">Filter</a> --}}
-								</form>
-							</div>
-
-	{{--
-							<div class="filter-col3 p-r-15 p-b-27">
-								<div class="mtext-102 cl2 p-b-15">
-									Color
-								</div>
-
-								<ul>
-									<li class="p-b-6">
-										<span class="fs-15 lh-12 m-r-6" style="color: #222;">
-											<i class="zmdi zmdi-circle"></i>
-										</span>
-
-										<a href="#" class="filter-link stext-106 trans-04">
-											Black
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<span class="fs-15 lh-12 m-r-6" style="color: #4272d7;">
-											<i class="zmdi zmdi-circle"></i>
-										</span>
-
-										<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-											Blue
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3;">
-											<i class="zmdi zmdi-circle"></i>
-										</span>
-
-										<a href="#" class="filter-link stext-106 trans-04">
-											Grey
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<span class="fs-15 lh-12 m-r-6" style="color: #00ad5f;">
-											<i class="zmdi zmdi-circle"></i>
-										</span>
-
-										<a href="#" class="filter-link stext-106 trans-04">
-											Green
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<span class="fs-15 lh-12 m-r-6" style="color: #fa4251;">
-											<i class="zmdi zmdi-circle"></i>
-										</span>
-
-										<a href="#" class="filter-link stext-106 trans-04">
-											Red
-										</a>
-									</li>
-
-									<li class="p-b-6">
-										<span class="fs-15 lh-12 m-r-6" style="color: #aaa;">
-											<i class="zmdi zmdi-circle-o"></i>
-										</span>
-
-										<a href="#" class="filter-link stext-106 trans-04">
-											White
-										</a>
-									</li>
-								</ul>
-							</div>
-							--}}
-
-						</div>
-					</div>
-					{{-- <div class="d-flex m-t-10">
-						<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-							All
-						</a>
-						@foreach ($categories as $category)
-							<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => $category->id], $request_array) }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-								{{ $category->categoryName }}
-							</a>
-						@endforeach
-					</div> --}}
-				</div>
-
-				<div class="d-flex">
-
-					<div class="col-sm-3 p-l-10 p-r-40 d-sm-block d-none">
-						<h5 class="m-b-15">Categories</h5>
-						<ul >
-							<li>						
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">All</a>
-							</li>
-							@foreach ($categories as $category)
-								<li class="m-b-5">
-									<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => $category->id], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >{{ $category->categoryName }}</a>
-									<?php if(  $category->subcategory != null ){?>
-										<ul class="p-l-10">
-											@foreach ($category->subcategory as $subcategory)
-												<li class="m-b-5">
-													<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategroy' => $subcategory->id], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >{{ $subcategory->subcategoryName }}</a>
-												</li>
-											@endforeach
-										</ul>
-									<?php } ?>
-
-								</li>
-							@endforeach
-						</ul>
-						<hr>
-						<h5 class="m-b-15">Brands</h5>
-						<ul >
-							@foreach ($brands as $brand)
-								<li class="m-b-5">
-									<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Brand' => $brand->id]) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >{{ $brand->brandName }}</a>
-								</li>
-							@endforeach
-						</ul>
-						<hr>
-						<h5 class="m-b-15">Colors</h5>
-						<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
-								@foreach (request()->all() as $key=> $item)
-									@if ( $key != "Color" )
-										@if ( is_array($item) )
-											@foreach ($item as $query_param_key => $query_param)
-												<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
-											@endforeach
-										@else
-											<input type="hidden" name="{{"$key"}}" value="{{$item}}">
-										@endif
-									@endif
-								@endforeach
-								@foreach ($colors as $color)
-									{{-- <li class="p-b-6"> --}}
-										<div class="mb-3 form-check col-12">
-											<input {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->colorName, request()->all()["Color"])) ? ' checked' : '' }} type="checkbox" class="form-check-input" id="exampleCheck1" name="Color[{{$color->id}}]" value="{{$color->colorName}}" {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->id, request()->all()["Color"])) ? ' checked' : '' }}>
-											<label class="form-check-label" for="exampleCheck1"> {{$color->colorName}}</label>
-										</div>
-									{{-- </li> --}}
-								@endforeach
-							<button type="submit"  class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-								Filter
-							</button>
-						</form>
-						<hr>
-						<h5 class="m-b-15">Sizes</h5>
-						<form action="{{ request()->route()->uri()}}" method="GET" class="row ml-2">
-								@foreach (request()->all() as $key=> $item)
-								@if ( $key != "Size" )
-									@if ( is_array($item) )
-										@foreach ($item as $query_param_key => $query_param)
-											<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+                                        </ul>
+                                        <div class="button-submit">
+                                            <button class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn mt-3" type="submit">Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form class="widget-facet mb-2" action="{{ request()->route()->uri()}}">
+                                @foreach (request()->all() as $key=> $item)
+											@if ( $key != "Size" )
+												@if ( is_array($item) )
+													@foreach ($item as $query_param_key => $query_param)
+														<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+													@endforeach
+												@else
+													<input type="hidden" name="{{"$key"}}" value="{{$item}}">
+												@endif
+											@endif
 										@endforeach
-									@else
-										<input type="hidden" name="{{"$key"}}" value="{{$item}}">
-									@endif
-								@endif
-							@endforeach
-							@foreach ($sizes as $size)
-							{{-- <li class="p-b-6"> --}}
-								<div class="mb-3 form-check col-12">
-									<input type="checkbox" class="form-check-input" id="exampleCheck1" name="Size[{{$size->id}}]" value="{{$size->sizeName}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->sizeName, request()->all()["Size"])) ? ' checked' : '' }}>
-									<label class="form-check-label" for="exampleCheck1">{{$size->sizeName}}</label>
-								</div>
-							{{-- </li> --}}
-							@endforeach
-							<button type="submit"  class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-								Filter
-							</button>
-						</form>
-						<hr>
-						<h5 class="m-b-15">Stock</h5>
-						<ul>
-							<li class="m-b-5">
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => 1], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >In Stock</a>
-							</li>
-							<li class="m-b-5">
-								<a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Stock' => null], $request_array) }}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" >All Items</a>
-							</li>
-						</ul>
-						<hr>
-						<h5 class="m-b-15">Price</h5>
-						<form action="{{ request()->route()->uri()}}" method="GET" class="row m">
-							@foreach (request()->all() as $key=> $item)
-								@if ( $key != "MaxPrice" && $key != "MinPrice" )
-									@if ( is_array($item) )
-										@foreach ($item as $query_param_key => $query_param)
-											<input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
-										@endforeach
-									@else
-										<input type="hidden" name="{{"$key"}}" value="{{$item}}">
-									@endif
-								@endif
-							@endforeach
-								<div class="mb-3 form-check col-xl-6">
-									<input type="number" class="form-control" id="exampleCheck1" name="MinPrice" value="{{ isset(request()->all()["MinPrice"]) && (is_array(request()->all()["MinPrice"])) ? request()->all()["MinPrice"] : '' }}" placeholder="Min Price">
-								</div>
-								<div class="mb-3 form-check col-xl-6">
-									<input type="number" class="form-control" id="exampleCheck1" name="MaxPrice" value="{{ isset(request()->all()["MaxPrice"]) && (is_array(request()->all()["MaxPrice"])) ? request()->all()["MaxPrice"] : '' }}" placeholder="Max Price">
-								</div>
-							<button type="submit"  class="ml-3 flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-								Filter
-							</button>
-						</form>
-					</div>
-					<div class="col-sm-9 col-12">
+                                <div class="widget-facet">
+                                    <div class="facet-title" data-bs-target="#size" data-bs-toggle="collapse" aria-expanded="true" aria-controls="size">
+                                        <span>Size</span>
+                                        <span class="icon icon-arrow-up"></span>
+                                    </div>
+                                    <div id="size" class="collapse show">
+                                        <ul class="tf-filter-group current-scrollbar">
+                                            @foreach ($sizes as $size)
+                                                <li class="list-item d-flex gap-12 align-items-center">
+                                                    <input type="checkbox" name="Size[{{$size->id}}]" class="tf-check" id="s" value="{{$size->sizeName}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->sizeName, request()->all()["Size"])) ? ' checked' : '' }}>
+                                                    <label for="s" class="label"><span>{{$size->sizeName}}</span></label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        <div class="button-submit">
+                                            <button class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn mt-3" type="submit">Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                          
+                            <form class="widget-facet mb-2" action="{{ request()->route()->uri()}}">
+                                @foreach (request()->all() as $key=> $item)
+                                    @if ( $key != "MaxPrice" && $key != "MinPrice" )
+                                        @if ( is_array($item) )
+                                            @foreach ($item as $query_param_key => $query_param)
+                                                <input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+                                            @endforeach
+                                        @else
+                                            <input type="hidden" name="{{"$key"}}" value="{{$item}}">
+                                        @endif
+                                    @endif
+                                @endforeach
+                                <div class="widget-facet">
+                                    <div class="facet-title" data-bs-target="#price" data-bs-toggle="collapse" aria-expanded="true" aria-controls="price">
+                                        <span>Price</span>
+                                        <span class="icon icon-arrow-up"></span>
+                                    </div>
+                                    <div id="price" class="collapse show">
+                                            <div class="tf-field style-1 mb_15" >
+                                                <input class="tf-field-input tf-input" type="number" id="property4"  name="MinPrice" value="{{ isset(request()->all()["MinPrice"]) && (is_array(request()->all()["MinPrice"])) ? request()->all()["MinPrice"] : '' }}" placeholder="Min Price" >
+                                                <label class="tf-field-label fw-4 text_black-2" for="property4">Min Price</label>
+                                            </div>
+                                            <div class="tf-field style-1 mb_15" >
+                                                <input class="tf-field-input tf-input" type="number" id="property4"  name="MaxPrice" value="{{ isset(request()->all()["MaxPrice"]) && (is_array(request()->all()["MaxPrice"])) ? request()->all()["MaxPrice"] : '' }}" placeholder="Max Price" >
+                                                <label class="tf-field-label fw-4 text_black-2" for="property4">Max Price</label>
+                                            </div>
+                                        <div class="button-submit">
+                                            <button class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn mt-3" type="submit">Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
 
-						<div class="row isotope-grid">
-							@php
+                        </div>   
+                    </div>
+                    <div>
+                        <div class="grid-layout wrapper-shop" data-grid="grid-4">
+
+                            @php
 								$favs = (array)json_decode(Cookie::get('favs'));
 							@endphp
 							@foreach ($products as $product)
 								@php
 									$thumb = explode(",", $product->images)[0];
+									$thumbnails_array = explode(",", $product->images);
 									$thumbnail_array = explode("/", $thumb);
 									$thumbnail = $thumbnail_array[ sizeof($thumbnail_array) -1 ];
 									$thumbnail_src = asset("storage/images/$thumbnail");
+                                    $hover_img = "";
+                                    if(sizeof($thumbnails_array) > 1){
+                                        $_thumbnail_array = explode("/", $thumbnails_array[1]);
+                                        $hover_img = $_thumbnail_array[ sizeof($_thumbnail_array) -1 ];
+                                        $hover_img = asset("storage/images/$hover_img");
+                                    }
 								@endphp
-								
-							<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-								<!-- Block2 -->
-								<div class="block2">
-									<div class="block2-pic hov-img0">
-										<img src="{{$thumbnail_src}}" alt="IMG-PRODUCT">
-
-										{{-- <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-											Quick View
-										</a> --}}
-									</div>
-
-									<div class="block2-txt flex-w flex-t p-t-14">
-										<div class="block2-txt-child1 flex-col-l ">
-											<a href="{{route("product", ["product_id" => $product->id])}}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-												{{$product->name}}
-											</a>
-
-										@if (isRtl($selected_currency["currencySymbol"]))
-											<span class="stext-105 cl3" dir="rtl">
-												{{  number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", ""). $selected_currency["currencySymbol"]}}
+								<!-- card product 2 -->
+                                <div class="card-product">
+                                    <div class="card-product-wrapper">
+                                        <a href="product-detail.html" class="product-img">
+                                            <img class="lazyload img-product" data-src="{{$thumbnail_src}}" src="{{$thumbnail_src}}" alt="image-product">
+                                            @if ($hover_img != "")
+                                                <img class="lazyload img-hover" data-src="{{$hover_img}}" src="{{$hover_img}}" alt="image-product">
+                                            @endif
+                                        </a>
+                                        <div class="list-product-btn">
+                                            <a href="#quick_add" data-bs-toggle="modal" class="box-icon bg_white quick-add tf-btn-loading">
+                                                <span class="icon icon-bag"></span>
+                                                <span class="tooltip">Quick Add</span>
+                                            </a>
+                                            <a class="box-icon bg_white wishlist btn-icon-action {{ isset($favs[$product->id]) ? "active" : "" }}"  {{ isset($favs[$product->id]) ? "faved" : "" }} fav-url="{{route("fav", ["product"=> $product->id])}}"  unfav-url="{{route("unfav", ["product"=> $product->id])}}" onclick="toggle_fav(this)">
+                                                <span class="icon icon-heart"></span>
+                                                <span class="tooltip">Add/Remove Wishlist</span>
+                                                <span class="icon icon-delete"></span>
+                                            </a>
+                                            <a href="#compare" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft" class="box-icon bg_white compare btn-icon-action">
+                                                <span class="icon icon-compare"></span>
+                                                <span class="tooltip">Add to Compare</span>
+                                                <span class="icon icon-check"></span>
+                                            </a>
+                                            <a href="#quick_view" data-bs-toggle="modal" class="box-icon bg_white quickview tf-btn-loading">
+                                                <span class="icon icon-view"></span>
+                                                <span class="tooltip">Quick View</span>
+                                            </a>
+                                        </div>
+                                        <div class="size-list">
+                                            @php
+                                                $_sizes = explode(",", $product->sizes); 
+                                            @endphp
+                                            <?php foreach( $_sizes as $_size){?>
+                                                <span>{{$_size}}</span>
+                                            <?php } ?>
+                                        </div>
+                                        {{-- <div class="countdown-box">
+                                            <div class="js-countdown" data-timer="1007500" data-labels="d :,h :,m :,s"></div>
+                                        </div> --}}
+                                        @if ( $product->sale > 0  )
+                                            
+                                            <div class="on-sale-wrap text-end">
+                                                <div class="on-sale-item">-{{ number_format((float)($product->sale * 100), 0, '.', '')}}%</div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="card-product-info">
+                                        <a href="{{route("product", ["product_id" => $product->id])}}" class="title link">{{$product->name}}</a>
+                                        @if (isRtl($selected_currency["currencySymbol"]))
+											<span class="price" dir="rtl" style="text-align: left;">
+												{{  number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", "")." ". $selected_currency["currencySymbol"]}}
 											</span>
 										@else
-											<span class="stext-105 cl3" >
+											<span class="price" >
 												{{ $selected_currency["currencySymbol"] . number_format((($product->price - ( $product->sale * $product->price )) / $selected_currency["cost"]), 2, ".", "")}}
 											</span>
 										@endif
 
-										</div>
+                                        @php
+                                            $_colors = explode( ",", $product->colors);
+                                        @endphp
+                                        <ul class="list-color-product">
+                                            @foreach ($_colors as $_color)
+                                                <li class="list-color-item color-swatch active">
+                                                    <span class="tooltip">{{$_color}}</span>
+                                                    <span class="swatch-value" style="background: {{$_color}}"></span>
+                                                    {{-- <img class="lazyload" data-src="images/products/brown.jpg" src="images/products/brown.jpg" alt="image-product"> --}}
+                                                </li>
+                                            @endforeach
 
-										<div class="block2-txt-child2 flex-r p-t-3">
-											<a {{ isset($favs[$product->id]) ? "faved" : "" }} fav-url="{{route("fav", ["product"=> $product->id])}}" unfav-url="{{route("unfav", ["product"=> $product->id])}}" onclick="toggle_fav(this)" class="btn-addwish-b2 dis-block pos-relative">
-												<img class="icon-heart2 dis-block trans-04 ab-t-l" style="{{ isset($favs[$product->id]) ? "opacity: 1;" : "" }}" src="{{asset("assets/images/icons/icon-heart-02.png")}}" alt="ICON">
-												<img class="icon-heart1 dis-block trans-04" src="{{asset("assets/images/icons/icon-heart-01.png")}}" alt="ICON">
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
 							@endforeach
+                        </div>
+                        <div class="tf-pagination-wrap">
+                            <ul class="wg-pagination justify-content-center">
+                                <li class="active">
+                                    <div class="pagination-item">1</div>
+                                </li>
+                                <li>
+                                    <a href="#" class="pagination-item animate-hover-btn">2</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="pagination-item animate-hover-btn">3</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="pagination-item animate-hover-btn"><i class="icon-arrow-right"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-						</div>
-					</div>
-				</div>
+        <div class="btn-sidebar-mobile start-0">
+            <a href="#filterShop" data-bs-toggle="offcanvas" aria-controls="offcanvasLeft">
+                <button class="type-hover">
+                    <i class="icon-open"></i>
+                    <span class="fw-5">Open sidebar</span>
+                </button>
+            </a>
+        </div>
+        <div class="offcanvas offcanvas-start canvas-filter" id="filterShop">
+            <div class="canvas-wrapper">
+                <header class="canvas-header">
+                    <div class="filter-icon">
+                        <span class="icon icon-filter"></span>
+                        <span>Filter</span>
+                    </div>
+                    <span class="icon-close icon-close-popup" data-bs-dismiss="offcanvas" aria-label="Close"></span>
+                </header>
+                <div class="canvas-body">
+                    <div class="widget-facet wd-categories">
+                        <div class="facet-title" data-bs-target="#categories" data-bs-toggle="collapse" aria-expanded="true" aria-controls="categories">
+                            <span>Categories</span>
+                            <span class="icon icon-arrow-up"></span>
+                        </div>
+                        @php
+                        $request_array = request()->all();
+                        if( isset( $request_array["Subcategory"] ) ) unset($request_array["Subcategory"]);
+                        if( isset( $request_array["Category"] ) ) unset($request_array["Category"]);
+                        @endphp
+                        <div id="categories" class="collapse show">
+                            <ul class="list-categoris current-scrollbar mb_36">
+                                {{-- <li class="cate-item current"><a href="#"><span>Fashion</span></a></li> --}}
+                                <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => null], request()->all()) }}"><span>All</span></a></li>
+                                @foreach ($categories as $category)
+                                    <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Category' => $category->id], $request_array) }}"><span>{{ $category->categoryName }}</span></a></li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="widget-facet wd-categories">
+                        <div class="facet-title" data-bs-target="#subcategories" data-bs-toggle="collapse" aria-expanded="true" aria-controls="subcategories">
+                            <span>Subcategories</span>
+                            <span class="icon icon-arrow-up"></span>
+                        </div>
+                        @php
+                        $request_array = request()->all();
+                        if( isset( $request_array["Subcategory"] ) ) unset($request_array["Subcategory"]);
+                        if( isset( $request_array["Category"] ) ) unset($request_array["Category"]);
+                        @endphp
+                        <div id="subcategories" class="collapse show">
+                            <ul class="list-categoris current-scrollbar mb_36">
+                                {{-- <li class="cate-item current"><a href="#"><span>Fashion</span></a></li> --}}
+                                <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategory' => null], request()->all()) }}"><span>All</span></a></li>
+                                @foreach ($categories as $category)
+                                    @if (isset($category->subcategory))
+                                        @foreach ($category->subcategory as $subcategory)
+                                            <li class="cate-item"><a href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Subcategory' => $subcategory->id], $request_array) }}"><span>{{$subcategory->subcategoryName}}</span></a></li>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <div action="#" id="facet-filter-form" class="facet-filter-form">
+                        {{-- <div class="widget-facet">
+                            <div class="facet-title" data-bs-target="#availability" data-bs-toggle="collapse" aria-expanded="true" aria-controls="availability">
+                                <span>Availability</span>
+                                <span class="icon icon-arrow-up"></span>
+                            </div>
+                            <div id="availability" class="collapse show">
+                                <ul class="tf-filter-group current-scrollbar mb_36">
+                                    <li class="list-item d-flex gap-12 align-items-center">
+                                        <input type="checkbox" name="availability" class="tf-check" id="availability-1">
+                                        <label for="availability-1" class="label"><span>In stock</span>&nbsp;<span>(14)</span></label>
+                                    </li>
+                                    <li class="list-item d-flex gap-12 align-items-center">
+                                        <input type="checkbox" name="availability" class="tf-check" id="availability-2">
+                                        <label for="availability-2" class="label"><span>Out of stock</span>&nbsp;<span>(2)</span></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> --}}
+                        <div class="widget-facet">
+                            <div class="facet-title" data-bs-target="#brand" data-bs-toggle="collapse" aria-expanded="true" aria-controls="brand">
+                                <span>Brand</span>
+                                <span class="icon icon-arrow-up"></span>
+                            </div>
+                            <div id="brand" class="collapse show">
+                                <ul class="tf-filter-group current-scrollbar mb_36">
+                                    @foreach ($brands as $brand)
+                                        <li class="list-item d-flex gap-12 align-items-center">
+                                            <input onchange="location.href=this.getAttribute('href')" href="{{  \App\Helpers\AppHelper::instance()->combine_get(['Brand' => $brand->id]) }}" type="checkbox" {{ isset(request()->all()["Brand"]) && request()->all()["Brand"] == $brand->id ? ' checked' : '' }} name="brand" class="tf-check" id="brand-1">
+                                            {{-- <label for="brand-1" class="label"><span>{{ $brand->brandName }}</span>&nbsp;<span>(8)</span></label> --}}
+                                            <label for="brand-1" class="label"><span>{{ $brand->brandName }}</label>
+                                        </li>
+                                    @endforeach
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                       
+                        <form class="widget-facet mb-2" action="{{ request()->route()->uri()}}">
+                            @foreach (request()->all() as $key=> $item)
+                                        @if ( $key != "Color" )
+                                            @if ( is_array($item) )
+                                                @foreach ($item as $query_param_key => $query_param)
+                                                    <input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+                                                @endforeach
+                                            @else
+                                                <input type="hidden" name="{{"$key"}}" value="{{$item}}">
+                                            @endif
+                                        @endif
+                                    @endforeach
+                            <div class="widget-facet mb-2" >
+                                <div class="facet-title" data-bs-target="#color" data-bs-toggle="collapse" aria-expanded="true" aria-controls="color">
+                                    <span>Color</span>
+                                    <span class="icon icon-arrow-up"></span>
+                                </div>
+                                <div id="color" class="collapse show">
+                                    <ul class="tf-filter-group filter-color current-scrollbar mb_36">
+                                        @foreach ($colors as $color)
+                                        <li class="list-item d-flex gap-12 align-items-center">
+                                            <input {{ isset(request()->all()["Color"]) && (is_array(request()->all()["Color"]) and in_array($color->colorName, request()->all()["Color"])) ? ' checked' : '' }} type="checkbox" name="Color[{{$color->id}}]" value="{{$color->colorName}}" class="tf-check-color" style="background: {{$color->colorName}}">
+                                            <label for="beige" class="label"><span>{{$color->colorName}}</span></label>
+                                        </li>
+                                    @endforeach
+                                    </ul>
+                                    <div class="button-submit">
+                                        <button class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn mt-3" type="submit">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <form class="widget-facet mb-2" action="{{ request()->route()->uri()}}">
+                            @foreach (request()->all() as $key=> $item)
+                                        @if ( $key != "Size" )
+                                            @if ( is_array($item) )
+                                                @foreach ($item as $query_param_key => $query_param)
+                                                    <input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+                                                @endforeach
+                                            @else
+                                                <input type="hidden" name="{{"$key"}}" value="{{$item}}">
+                                            @endif
+                                        @endif
+                                    @endforeach
+                            <div class="widget-facet mb-2">
+                                <div class="facet-title" data-bs-target="#size" data-bs-toggle="collapse" aria-expanded="true" aria-controls="size">
+                                    <span>Size</span>
+                                    <span class="icon icon-arrow-up"></span>
+                                </div>
+                                <div id="size" class="collapse show">
+                                    <ul class="tf-filter-group current-scrollbar">
+                                        @foreach ($sizes as $size)
+                                            <li class="list-item d-flex gap-12 align-items-center">
+                                                <input type="checkbox" name="Size[{{$size->id}}]" class="tf-check" id="s" value="{{$size->sizeName}}" {{ isset(request()->all()["Size"]) && (is_array(request()->all()["Size"]) and in_array($size->sizeName, request()->all()["Size"])) ? ' checked' : '' }}>
+                                                <label for="s" class="label"><span>{{$size->sizeName}}</span></label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <div class="button-submit">
+                                        <button class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn mt-3" type="submit">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                      
+                        <form class="widget-facet mb-2" action="{{ request()->route()->uri()}}">
+                            @foreach (request()->all() as $key=> $item)
+                                @if ( $key != "MaxPrice" && $key != "MinPrice" )
+                                    @if ( is_array($item) )
+                                        @foreach ($item as $query_param_key => $query_param)
+                                            <input type="hidden" name="{{"$key"."[".$query_param_key."]"}}" value="{{$query_param}}">
+                                        @endforeach
+                                    @else
+                                        <input type="hidden" name="{{"$key"}}" value="{{$item}}">
+                                    @endif
+                                @endif
+                            @endforeach
+                            <div class="widget-facet">
+                                <div class="facet-title" data-bs-target="#price" data-bs-toggle="collapse" aria-expanded="true" aria-controls="price">
+                                    <span>Price</span>
+                                    <span class="icon icon-arrow-up"></span>
+                                </div>
+                                <div id="price" class="collapse show">
+                                        <div class="tf-field style-1 mb_15" >
+                                            <input class="tf-field-input tf-input" type="number" id="property4"  name="MinPrice" value="{{ isset(request()->all()["MinPrice"]) && (is_array(request()->all()["MinPrice"])) ? request()->all()["MinPrice"] : '' }}" placeholder="Min Price" >
+                                            <label class="tf-field-label fw-4 text_black-2" for="property4">Min Price</label>
+                                        </div>
+                                        <div class="tf-field style-1 mb_15" >
+                                            <input class="tf-field-input tf-input" type="number" id="property4"  name="MaxPrice" value="{{ isset(request()->all()["MaxPrice"]) && (is_array(request()->all()["MaxPrice"])) ? request()->all()["MaxPrice"] : '' }}" placeholder="Max Price" >
+                                            <label class="tf-field-label fw-4 text_black-2" for="property4">Max Price</label>
+                                        </div>
+                                    <div class="button-submit">
+                                        <button class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn mt-3" type="submit">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
 
-				<!-- Load more -->
-				<div class="flex-c-m flex-w w-full p-t-45">
-					{{ $products->links() }}
-					{{-- <a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-						Load More
-					</a> --}}
-				</div>
-			</div>
-		</div>
+                    </div>  
+                </div>
+                
+            </div>       
+        </div>
+         
+    <script>
+        function toggle_fav(element){
+            console.log("favign")
+            if(element.getAttribute("faved") == null){
+                 fav(element);
+            }else{
+                un_fav(element);
+            }
+        }
 
+        function fav(element){
+            let fav_element_nav = document.querySelectorAll("#nav-fav");
+            element.setAttribute('faved', "1");
+            fetch(element.getAttribute('fav-url'));
+            fav_element_nav.forEach(element => {
+                element.innerHTML = Number(element.innerHTML) + 1;
+            });
+        }
 
-		<script>
-			
-			function toggle_fav(element){
-				if(element.getAttribute("faved") == null){
-					 fav(element);
-				}else{
-					un_fav(element);
-				}
-			}
+        function un_fav(element){
+            let fav_element_nav = document.querySelectorAll("#nav-fav");
+            element.removeAttribute('faved');
+            fav_element_nav.forEach(element => {
+                element.innerHTML = Number(element.innerHTML) - 1;
+            });
+            fetch(element.getAttribute('unfav-url'));
+        }
 
-			function fav(element){
-				let fav_element_nav = document.querySelector("#nav-fav");
-				element.querySelector('.icon-heart2').style.opacity='1'
-				element.querySelector('.icon-heart1').style.opacity='0'
-				element.setAttribute('faved', "1");
-				// console.log(element)
-				fetch(element.getAttribute('fav-url'));
-				fav_element_nav.setAttribute("data-notify", Number(fav_element_nav.getAttribute("data-notify"))+ 1);
-			}
-			
-			function un_fav(element){
-				let fav_element_nav = document.querySelector("#nav-fav");
-				element.querySelector('.icon-heart2').style.opacity='0'
-				element.querySelector('.icon-heart1').style.opacity='1'
-				element.removeAttribute('faved');
-				fav_element_nav.setAttribute("data-notify", Number(fav_element_nav.getAttribute("data-notify")) - 1);
-				fetch(element.getAttribute('unfav-url'));
-
-			}
-
-		</script>
-
-	@endsection
+    </script>
+@endsection

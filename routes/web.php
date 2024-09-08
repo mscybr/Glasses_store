@@ -38,6 +38,7 @@ Route::get("unfav", [ProductController::class, "remove_fav"])->name("unfav");
 Route::get("favs", [ProductController::class, "favs"])->name("favs");
 Route::get("about", function(){ return view("en.store.about"); })->name("about");
 Route::get("contact", function(){ return view("en.store.contact"); })->name("contact");
+Route::get("faqs", function(){ return view("en.store.faqs"); })->name("faqs");
 Route::get("shop/product/{product_id}", [ProductController::class,  "show"] )->name("product");
 Route::get("site_config/toggle_currency", [SiteConfigController::class, "toggle_currency"])->name("toggle_currency");
 
@@ -46,12 +47,12 @@ Route::get("site_config/toggle_currency", [SiteConfigController::class, "toggle_
 // logged in
 Route::group(["middleware" => "is.logged"], function(){
     Route::get("profile", [UserDashboard::class, "profile"])->name("profile");
+    Route::get("cart/delete", [CartController::class, "destroy"])->name("delete_cart");
     Route::post("billing_address", [UserDashboard::class, "store_billing_address"])->name("store_billing_address");
     Route::post("billing_address/delete", [UserDashboard::class, "destroy_billing_address"])->name("delete_billing_address");
     Route::get("cart", [CartController::class, "index"])->name("cart_items");
     Route::post("cart/checkout", [CartController::class, "checkout"])->name("send_to_check_out");
     Route::post("order/create", [OrderController::class, "store"])->name("store_order");
-    Route::post("cart/delete", [CartController::class, "destroy"])->name("delete_cart");
     Route::post("review", [ReviewController::class, "store"])->name("add_review");
 });
 
